@@ -26,7 +26,7 @@ namespace Bangazon.Models
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:C}")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         [Required]
         public int Quantity { get; set; }
