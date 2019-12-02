@@ -142,7 +142,7 @@ namespace Bangazon.Data {
                     Description = "It flies high",
                     Title = "Kite",
                     Quantity = 100,
-                    Price = 2.99
+                    Price = 2.99M
                 },
                 new Product()
                 {
@@ -152,7 +152,7 @@ namespace Bangazon.Data {
                     Description = "It rolls fast",
                     Title = "Wheelbarrow",
                     Quantity = 5,
-                    Price = 29.99
+                    Price = 29.99M
                 },
                 new Product()
                 {
@@ -162,7 +162,7 @@ namespace Bangazon.Data {
                     Description = "It cuts things",
                     Title = "Saw",
                     Quantity = 18,
-                    Price = 31.49
+                    Price = 31.49M
                 },
                 new Product()
                 {
@@ -172,7 +172,7 @@ namespace Bangazon.Data {
                     Description = "It puts holes in things",
                     Title = "Electric Drill",
                     Quantity = 12,
-                    Price = 24.89
+                    Price = 24.89M
                 },
                 new Product()
                 {
@@ -182,7 +182,7 @@ namespace Bangazon.Data {
                     Description = "It puts things together",
                     Title = "Hammer",
                     Quantity = 32,
-                    Price = 22.69
+                    Price = 22.69M
                 }
             );
 
@@ -192,7 +192,20 @@ namespace Bangazon.Data {
                     OrderId = 1,
                     UserId = user.Id,
                     PaymentTypeId = null
+                },
+                new Order()
+                {
+                OrderId = 2,
+                    UserId = user.Id,
+                    PaymentTypeId = null
+                },
+                new Order()
+                {
+                OrderId = 3,
+                    UserId = user.Id,
+                    PaymentTypeId = null
                 }
+
             );
 
             modelBuilder.Entity<OrderProduct> ().HasData (
@@ -201,17 +214,21 @@ namespace Bangazon.Data {
                     OrderProductId = 1,
                     OrderId = 1,
                     ProductId = 1
-                }
-            );
-
-            modelBuilder.Entity<OrderProduct> ().HasData (
+                },
                 new OrderProduct()
                 {
-                    OrderProductId = 2,
-                    OrderId = 1,
-                    ProductId = 2
-                }
+                     OrderProductId = 2,
+                     OrderId = 2,
+                     ProductId = 1
+                },
+                new OrderProduct()
+                  {
+                      OrderProductId = 3,
+                      OrderId = 3,
+                      ProductId = 1
+                  }
             );
+
         }
     }
 }
