@@ -4,14 +4,16 @@ using Bangazon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bangazon.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191202215220_BangazonTables4")]
+    partial class BangazonTables4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,11 +102,7 @@ namespace Bangazon.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-<<<<<<< HEAD
                             ConcurrencyStamp = "6a3f54c8-7f28-429a-a986-30f637e9a82c",
-=======
-                            ConcurrencyStamp = "38427d04-995f-485f-a213-2909187faedd",
->>>>>>> master
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admina",
@@ -112,11 +110,7 @@ namespace Bangazon.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-<<<<<<< HEAD
                             PasswordHash = "AQAAAAEAACcQAAAAEO2cxe77u3aZ8HGwWyYlpIrGl8+I1Lg54bBwI4LflpuDNYZdwWSDfexQE/qNuCCsVw==",
-=======
-                            PasswordHash = "AQAAAAEAACcQAAAAELPm6blHG7ZIP4hp+LWslfLN7SOX3AOdiTR57Ibpm5HVsdyqWl4zcO/hKgcKPkI0JQ==",
->>>>>>> master
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             StreetAddress = "123 Infinity Way",
@@ -161,21 +155,6 @@ namespace Bangazon.Migrations
                             OrderId = 1,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
-<<<<<<< HEAD
-=======
-                        },
-                        new
-                        {
-                            OrderId = 2,
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
-                        },
-                        new
-                        {
-                            OrderId = 3,
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "00000000-ffff-ffff-ffff-ffffffffffff"
->>>>>>> master
                         });
                 });
 
@@ -210,19 +189,8 @@ namespace Bangazon.Migrations
                         new
                         {
                             OrderProductId = 2,
-<<<<<<< HEAD
                             OrderId = 1,
                             ProductId = 2
-=======
-                            OrderId = 2,
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            OrderProductId = 3,
-                            OrderId = 3,
-                            ProductId = 1
->>>>>>> master
                         });
                 });
 
@@ -334,10 +302,7 @@ namespace Bangazon.Migrations
                         {
                             ProductId = 1,
                             Active = true,
-<<<<<<< HEAD
                             City = "Chicago",
-=======
->>>>>>> master
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It flies high",
                             Price = 2.99m,
@@ -350,10 +315,7 @@ namespace Bangazon.Migrations
                         {
                             ProductId = 2,
                             Active = true,
-<<<<<<< HEAD
                             City = "Chicago",
-=======
->>>>>>> master
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It rolls fast",
                             Price = 29.99m,
@@ -366,10 +328,7 @@ namespace Bangazon.Migrations
                         {
                             ProductId = 3,
                             Active = true,
-<<<<<<< HEAD
                             City = "Frisco",
-=======
->>>>>>> master
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It cuts things",
                             Price = 31.49m,
@@ -382,10 +341,7 @@ namespace Bangazon.Migrations
                         {
                             ProductId = 4,
                             Active = true,
-<<<<<<< HEAD
                             City = "Frisco",
-=======
->>>>>>> master
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It puts holes in things",
                             Price = 24.89m,
@@ -398,10 +354,7 @@ namespace Bangazon.Migrations
                         {
                             ProductId = 5,
                             Active = true,
-<<<<<<< HEAD
                             City = "New York City",
-=======
->>>>>>> master
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "It puts things together",
                             Price = 22.69m,
