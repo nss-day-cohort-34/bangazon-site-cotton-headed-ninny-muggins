@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Bangazon.Models;
 using Bangazon.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace Bangazon.Controllers
 {
@@ -19,9 +20,16 @@ namespace Bangazon.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string SearchString)
         {
             var applicationDbContext = _context.Product.OrderByDescending(p => p.DateCreated).Take(20);
+
+            if (SearchString != null)
+            {
+                applicationDbContext = _context.Product.Where(p => p.City.Contains(SearchString));
+                
+            }
+           
             return View(await applicationDbContext.ToListAsync());
         }
 
