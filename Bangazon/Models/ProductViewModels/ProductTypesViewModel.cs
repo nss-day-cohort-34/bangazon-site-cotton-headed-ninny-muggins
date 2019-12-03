@@ -1,7 +1,7 @@
 ﻿using Bangazon.Models;
 using System.Collections.Generic;
 
-namespace Bangazon.Controllers
+namespace Bangazon.Models.ProductViewModels
 {
     public class ProductTypesViewModel
     {

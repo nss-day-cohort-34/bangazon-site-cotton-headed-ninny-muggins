@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Bangazon.Models.ProductViewModels.GroupedProducts>
+
+@{
+    ViewData["Title"] = "Types";
+}
+
+<h1>Types</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        @if (item.Products.ToList().Count > 0) {
+        {
+            <h2>@item.TypeName</h2>
+
+            @foreach (var p in item.Products)
+            {
+                {
+                    <span>@p.Title</span>
+                    <br />
+                }
+            }
+        }
+
+        @*<tr>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>*@
+        }
+    </tbody>
+</table>

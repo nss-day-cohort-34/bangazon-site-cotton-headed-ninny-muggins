@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Bangazon.Models.ProductViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -18,22 +19,22 @@ namespace Bangazon.Controllers
         {
             _context = context;
         }
+
         public async Task<IActionResult> Types()
         {
-            var model = new ProductTypesViewModel();
-​
-    model.GroupedProducts = await _context
-        .ProductType
-        .Select(pt => new GroupedProducts
-        {
-            TypeId = pt.ProductTypeId,
-            TypeName = pt.Label,
-            ProductCount = pt.Products.Count(),
-            Products = pt.Products.OrderByDescending(p => p.DateCreated).Take(3)
-        }).ToListAsync();
-​
-    return View(model);
+            //var model = new ProductTypesViewModel();
+            var groupedProducts = await _context
+                .ProductType
+                .Select(pt => new GroupedProducts
+                    {
+                        TypeId = pt.ProductTypeId,
+                        TypeName = pt.Label,
+                        ProductCount = pt.Products.Count(),
+                        Products = pt.Products.OrderByDescending(p => p.DateCreated).Take(3)
+                    }).ToListAsync();
+            return View(groupedProducts);
         }
+
         // GET: Products
         public async Task<IActionResult> Index()
         {
