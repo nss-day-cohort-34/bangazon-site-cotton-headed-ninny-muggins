@@ -29,10 +29,16 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var applicationDbContext = _context.User
-                                                .Include(u => u.FirstName)
-                                                .Where(u => u.UserId == u.UserId);
-            return View(await applicationDbContext.ToListAsync());
+            var User = new User()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                StreetAddress = user.StreetAddress
+            };
+            //var applicationDbContext = _context.User
+            //                                    .Include(u => u.FirstName)
+            //                                    .Where(u => u.UserId == u.UserId);
+            return View(User);
         }
 
         // GET: Users/Details/5
@@ -43,14 +49,19 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var User = new User()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                StreetAddress = user.StreetAddress
+            };
+            if (User == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(User);
         }
 
         // GET: Users/Create

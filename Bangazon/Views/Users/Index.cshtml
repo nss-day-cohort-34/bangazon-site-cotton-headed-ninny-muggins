@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Bangazon.Models.User>
+﻿@model Bangazon.Models.User
 
 @{
     ViewData["Title"] = "Index";
@@ -22,23 +22,21 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(model => model.FirstName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                @Html.DisplayFor(model => model.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StreetAddress)
+                @Html.DisplayFor(model => model.StreetAddress)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
+                <a asp-action="Details" asp-route-id=@Html.DisplayFor(model => model.UserId)>Details</a> |
+                <a asp-action="Index">Add Payment Option</a>
             </td>
         </tr>
-}
     </tbody>
 </table>
