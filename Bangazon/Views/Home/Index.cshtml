@@ -1,8 +1,54 @@
-﻿@{
+﻿@model IEnumerable<Bangazon.Models.Product>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to Bangazon</h1>
+    <p>Here are some of the latest products available on our store:</p>
 </div>
+
+<div class="justify-content-center">
+    <form asp-controller="Computers" asp-action="Index" method="get">
+        <p>
+            <input type="text" name="SearchString" placeholder="Search local - enter a city to find local products" size="40">
+            <input type="submit" value="Search" />
+        </p>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href=@Url.Action("Details", "Products", new {Id = item.ProductId })>@item.Title</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                 
+            </tr>
+        }
+    </tbody>
+</table>
