@@ -4,11 +4,10 @@
     ViewData["Title"] = "Types";
 }
 
-<h1>Types</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<h1>Product Types</h1>
+
 <table class="table">
     <thead>
         <tr>
@@ -16,27 +15,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        @if (item.Products.ToList().Count > 0) {
-        {
-            <h2>@item.TypeName</h2>
-
-            @foreach (var p in item.Products)
+        @{ foreach (var item in Model)
             {
+                string productCountString = $"({item.ProductCount})";
+                if (item.Products.ToList().Count > 0)
                 {
-                    <span>@p.Title</span>
-                    <br />
+
+                    <h2>@item.TypeName @productCountString</h2>
+                   // <span>@productCountString</span>
+
+                    @foreach (var p in item.Products)
+                    {
+                        <span>@p.Title</span>
+                        <br />
+                    }
+                    }
+
                 }
             }
-        }
-
-        @*<tr>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>*@
-        }
     </tbody>
-</table>
+    </table>
