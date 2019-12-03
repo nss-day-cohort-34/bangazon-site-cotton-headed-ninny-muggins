@@ -21,7 +21,7 @@
                 if (item.Products.ToList().Count > 0)
                 {
 
-                    <h2>@item.TypeName @productCountString</h2>
+                    <a href=@Url.Action("ProductListByType", "Products", new {Id = item.TypeId })><h2>@item.TypeName @productCountString</h2></a>
                     // <span>@productCountString</span>
 
                     @foreach (var p in item.Products)
