@@ -1,0 +1,1 @@
+﻿INSERT INTO Product (ProductTypeId, DateCreated, [Description], Title, Price, Quantity, UserId, City, ImagePath, Active, ProductTypeId) VALUES ('Tablet', 1, 400, 3, 'A tablet you can surf the web on', 5);
