@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Bangazon.Models.ProductViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bangazon.Controllers
 {
@@ -54,7 +55,6 @@ namespace Bangazon.Controllers
                 .Include(pt => pt.Products).ToList()
                 .FirstOrDefault();
                
-
             if (productType == null)
             {
                 return NotFound();
@@ -84,6 +84,7 @@ namespace Bangazon.Controllers
             return View(product);
         }
 
+        [Authorize]
         // GET: Products/Create
         public IActionResult Create()
         {
