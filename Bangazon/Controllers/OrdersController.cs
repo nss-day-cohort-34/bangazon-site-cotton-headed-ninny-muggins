@@ -79,7 +79,7 @@ namespace Bangazon.Controllers
             {
                 orderDetail.LineItems.ToList().Add(new OrderLineItem {
                     Product = op.Product,
-                    Units = 0
+                    //Units = 0
                 });
             }
 

@@ -1,42 +1,81 @@
-﻿@model Bangazon.Models.Order
+﻿@model Bangazon.Models.OrderViewModels.OrderDetailViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Order Details</h1>
 
 <div>
     <h4>Order</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.DateCreated)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.DateCreated)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCompleted)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.DateCompleted)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCompleted)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.DateCompleted)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.User)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.User.Id)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PaymentType)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.PaymentType)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PaymentType.AccountNumber)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.PaymentType.AccountNumber)
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.OrderId">Edit</a> |
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Products
+                </th>
+                <th>
+                    Units to Purchase
+                </th>
+                <th>
+                    Cost
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var li in Model.LineItems)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => li.Product.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => li.Units)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => li.Cost)
+                    </td>
+                    <td>
+                        @*<a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |*@
+                        <a asp-action="Delete"
+                           asp-route-id="@Model.Order.OrderProducts.Where(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId)">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+</div>
+<div>
+    @*<a asp-action="Edit" asp-route-id="@Model.Order.OrderId">Edit</a> |*@
     <a asp-action="Index">Back to List</a>
 </div>
