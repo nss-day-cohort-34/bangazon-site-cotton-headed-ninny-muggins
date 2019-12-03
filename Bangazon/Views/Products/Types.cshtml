@@ -22,16 +22,17 @@
                 {
 
                     <h2>@item.TypeName @productCountString</h2>
-                   // <span>@productCountString</span>
+                    // <span>@productCountString</span>
 
                     @foreach (var p in item.Products)
                     {
-                        <span>@p.Title</span>
+                        //<a asp-controller="Products" asp-action="Details"><span>@p.Title</span></a>
+                        <a href=@Url.Action("Details", "Products", new {Id = p.ProductId })>@p.Title</a>
                         <br />
                     }
-                    }
-
                 }
+
             }
+        }
     </tbody>
-    </table>
+</table>
