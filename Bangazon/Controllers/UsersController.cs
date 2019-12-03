@@ -31,7 +31,7 @@ namespace Bangazon.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var applicationDbContext = _context.User
                                                 .Include(u => u.FirstName)
-                                                .Where(u => u.UserId == u.User.UserId);
+                                                .Where(u => u.UserId == u.UserId);
             return View(await applicationDbContext.ToListAsync());
         }
 
