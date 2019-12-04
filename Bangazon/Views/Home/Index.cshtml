@@ -10,14 +10,25 @@
 </div>
 
 <div class="justify-content-center">
-    <form asp-controller="Computers" asp-action="Index" method="get">
+    <form asp-controller="Home" asp-action="Index" method="get">
         <p>
-            <input type="text" name="SearchString" placeholder="Search local - enter a city to find local products" size="40">
-            <input type="submit" value="Search" />
+            <input type="text" name="SearchString" placeholder="Enter a city to find local products" size="30">
+            <input type="submit" value="Search" />  |
+            <a href=%: Url.Action(" Index", "Home" ) %>
+               
+                <button>Reset List</button>
+            </a>
         </p>
+        
     </form>
 </div>
 
+@if (Model.ToList().Count == 0)
+{
+    <p>No results matching your seach. Please try another city.</p>
+}
+else
+{
 
 <table class="table">
     <thead>
@@ -39,7 +50,7 @@
         {
             <tr>
                 <td>
-                    <a href=@Url.Action("Details", "Products", new {Id = item.ProductId })>@item.Title</a>
+                    <a href=@Url.Action("Details", "Products", new { Id = item.ProductId })>@item.Title</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
@@ -52,3 +63,4 @@
         }
     </tbody>
 </table>
+}
