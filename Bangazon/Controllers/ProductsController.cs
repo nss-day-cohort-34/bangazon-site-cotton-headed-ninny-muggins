@@ -10,6 +10,7 @@ using Bangazon.Models;
 using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Text.RegularExpressions;
 
 namespace Bangazon.Controllers
 {
@@ -122,11 +123,18 @@ namespace Bangazon.Controllers
                 viewModel.Product.User = user;
                 viewModel.Product.UserId = user.Id;
                 viewModel.Product.DateCreated = DateTime.Now;
+                if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
+                {
+                    return BadRequest(new { error = "Product title and description cannot contain special characters" });
+                }
                 _context.Add(viewModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ToSellIndex));
             }
+
             
+
+                     
             return View(viewModel);
         }
 
@@ -219,6 +227,17 @@ namespace Bangazon.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
+        }
+
+        public bool hasSpecialChar(string input)
+        {
+            string specialChar = @"\|!#$%&/()=?»«@£§€{}.-;'<>_,";
+            foreach (var item in specialChar)
+            {
+                if (input.Contains(item)) return true;
+            }
+
+            return false;
         }
     }
 }
