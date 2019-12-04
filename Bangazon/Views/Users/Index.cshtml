@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>User Profile</h1>
 
 <table class="table">
     <thead>
@@ -33,9 +33,9 @@
                 @Html.DisplayFor(model => model.StreetAddress)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
+                <a asp-action="Edit" asp-route-id=@Html.DisplayFor(model => model.UserId)>Edit</a> |
                 <a asp-action="Details" asp-route-id=@Html.DisplayFor(model => model.UserId)>Details</a> |
-                <a asp-action="Index">Add Payment Option</a>
+                <a asp-controller="PaymentTypes" asp-action="Index">Payment Options</a>
             </td>
         </tr>
     </tbody>

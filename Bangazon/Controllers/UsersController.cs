@@ -65,26 +65,26 @@ namespace Bangazon.Controllers
         }
 
         // GET: Users/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,StreetAddress")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
+        //// POST: Users/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("UserId,FirstName,LastName,StreetAddress")] User user)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(user);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(user);
+        //}
 
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -94,12 +94,18 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var User = new User()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                StreetAddress = user.StreetAddress
+            };
+            if (User == null)
             {
                 return NotFound();
             }
-            return View(user);
+            return View(User);
         }
 
         // POST: Users/Edit/5
@@ -107,9 +113,19 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("UserId,FirstName,LastName,StreetAddress")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("UserId,FirstName,LastName,StreetAddress")] User userModel)
         {
-            if (id != user.UserId)
+            //edit does not update the db on post so it fails
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var User = new User()
+            {
+                UserId = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                StreetAddress = user.StreetAddress
+            };
+
+            if (user.Id != user.Id)
             {
                 return NotFound();
             }
@@ -118,12 +134,12 @@ namespace Bangazon.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    _context.Update(User);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserId))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -134,7 +150,8 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+           ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", userModel.UserId);
+            return View(userModel);
         }
 
         // GET: Users/Delete/5
