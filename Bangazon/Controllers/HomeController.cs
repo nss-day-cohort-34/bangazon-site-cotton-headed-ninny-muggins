@@ -31,10 +31,19 @@ namespace Bangazon.Controllers
 
             if (SearchString != null)
             {
-                applicationDbContext = _context.Product.Where(p => p.City.Contains(SearchString));
+                applicationDbContext = _context.Product.Where(p => p.City.ToLower().Contains(SearchString));
                 
             }
            
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> Search(string SearchString)
+        {
+            var applicationDbContext = _context.Product.Where(p => p.Title.ToLower().Contains(SearchString) || p.City.ToLower().Contains(SearchString));
+
+
+
             return View(await applicationDbContext.ToListAsync());
         }
 

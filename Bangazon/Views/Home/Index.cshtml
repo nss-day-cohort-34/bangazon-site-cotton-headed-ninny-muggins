@@ -10,7 +10,7 @@
 </div>
 
 <div class="justify-content-center">
-    <form asp-controller="Home" asp-action="Index" method="get">
+    @*<form asp-controller="Home" asp-action="Index" method="get">
         <p>
             <input type="text" name="SearchString" placeholder="Enter a city to find local products" size="30">
             <input type="submit" value="Search" />  |
@@ -20,7 +20,7 @@
             </a>
         </p>
         
-    </form>
+    </form>*@
 </div>
 
 @if (Model.ToList().Count == 0)
