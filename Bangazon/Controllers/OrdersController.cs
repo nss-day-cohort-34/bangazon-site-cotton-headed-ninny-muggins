@@ -56,7 +56,7 @@ namespace Bangazon.Controllers
                 var olm = new OrderLineItem
                 {
                     Product = op.Product,
-                    //Units = 0
+                    Units = 1
                 };
                 return olm;
             });
@@ -64,6 +64,7 @@ namespace Bangazon.Controllers
             var orderDetail = new OrderDetailViewModel()
             {
                 Order = order,
+                OrderProducts = orderProduct,
                 LineItems = lineItems
             };
 
@@ -190,37 +191,42 @@ namespace Bangazon.Controllers
         // GET: Orders/Delete/5
         // STILL NEED TO REFACTOR FOR DELETING SINGLE ORDERPRODUCT
 
-        //public async Task<IActionResult> DeleteOrderProduct(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> DeleteOrderProduct(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var orderProduct = await _context.OrderProduct
-        //        .Include(o => o.PaymentType)
-        //        .Include(o => o.User)
-        //        .FirstOrDefaultAsync(m => m.OrderId == id);
-        //    if (orderProduct == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var orderProduct = await _context.OrderProduct
+                .Include(op => op.Order)
+                .Include(op => op.Product)
+                .FirstOrDefaultAsync(op => op.OrderProductId == id);
+//                .Include(o => o.OrderProducts);
+                //.Where(op => op.OrderId == o.OrderId));
+               // .Include(o => o.PaymentType)
+                
 
-        //    return View(orderProduct);
-        //}
+            if (orderProduct == null)
+            {
+                return NotFound();
+            }
 
-        // POST: Orders/Delete/5
+            return View(orderProduct);
+        }
+
+        //POST: Orders/Delete/5
         // STILL NEED TO REFACTOR FOR DELETING SINGLE ORDERPRODUCT
 
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteOrderProductConfirmed(int id)
-        //{
-        //    var order = await _context.Order.FindAsync(id);
-        //    _context.Order.Remove(order);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOrderProductConfirmed(int id)
+        {
+            var order = await _context.Order.FindAsync(id);
+            _context.Order.Remove(order);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
         private bool OrderExists(int id)
         {
