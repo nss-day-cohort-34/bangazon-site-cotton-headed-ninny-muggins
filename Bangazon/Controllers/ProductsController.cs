@@ -125,7 +125,7 @@ namespace Bangazon.Controllers
                 viewModel.Product.DateCreated = DateTime.Now;
                 if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
                 {
-                    return BadRequest(new { error = "Product title and description cannot contain special characters" });
+                    return BadRequest(new { error = "Product title and description cannot contain special characters. Go back and try again." });
                 }
                 _context.Add(viewModel.Product);
                 await _context.SaveChangesAsync();
