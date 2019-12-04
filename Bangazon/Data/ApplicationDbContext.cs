@@ -236,5 +236,7 @@ namespace Bangazon.Data {
 
         }
 
+        public DbSet<Bangazon.Models.User> User { get; set; }
+
     }
 }
