@@ -190,8 +190,6 @@ namespace Bangazon.Controllers
         }
 
         // GET: Orders/Delete/5
-        // STILL NEED TO REFACTOR FOR DELETING SINGLE ORDERPRODUCT
-
         public async Task<IActionResult> DeleteOrderProduct(int? id)
         {
             if (id == null)
@@ -206,7 +204,6 @@ namespace Bangazon.Controllers
 //                .Include(o => o.OrderProducts);
                 //.Where(op => op.OrderId == o.OrderId));
                // .Include(o => o.PaymentType)
-                
 
             if (orderProduct == null)
             {
@@ -217,13 +214,12 @@ namespace Bangazon.Controllers
         }
 
         //POST: Orders/Delete/5
-
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteOP")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteOrderProductConfirmed(int id)
+        public async Task<IActionResult> DeleteOrderProductConfirmed(int id, OrderProduct op)
         {
-            var orderProduct = await _context.OrderProduct.FindAsync(id);
-            _context.OrderProduct.Remove(orderProduct);
+            //var orderProduct = await _context.OrderProduct.FindAsync(id);
+            _context.OrderProduct.Remove(op);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details));
         }
