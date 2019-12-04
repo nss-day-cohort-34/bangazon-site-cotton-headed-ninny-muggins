@@ -42,9 +42,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Profile</a>
                         </li>
-                        <li class="nav-item, searchForm">
+                        <li class="nav-item" style="margin:auto">
                             <form class="searchForm" asp-controller="Home" asp-action="Search" method="get">
                                 <p class="searchField">
                                     <input type="text" name="SearchString" placeholder="Product search by location or name" size="32">
