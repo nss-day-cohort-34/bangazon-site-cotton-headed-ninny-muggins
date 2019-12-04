@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bangazon.Models
 {
-    public class User
+    public class User 
     {
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

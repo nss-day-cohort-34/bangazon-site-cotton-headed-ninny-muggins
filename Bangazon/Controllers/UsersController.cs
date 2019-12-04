@@ -58,6 +58,7 @@ namespace Bangazon.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var User = new User()
             {
+                UserId = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 StreetAddress = user.StreetAddress,
@@ -102,46 +103,59 @@ namespace Bangazon.Controllers
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var User = new User()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                StreetAddress = user.StreetAddress
-            };
+
+            user.Id = id;
+            //var User = new User()
+            //{
+            //    ApplicationUser = user,
+            //    UserId = user.Id,
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName,
+            //    StreetAddress = user.StreetAddress,
+            //    PhoneNumber = user.PhoneNumber
+            //};
             if (User == null)
             {
                 return NotFound();
             }
-            return View(User);
+            return View(user);
         }
 
         // POST: Users/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.C:\Users\marla\workspace\cSharp\groupProjects\bangazon-site-cotton-headed-ninny-muggins\Bangazon\Views\Users\
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("UserId,FirstName,LastName,StreetAddress")] User userModel)
+        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,StreetAddress, PhoneNumber")] ApplicationUser applicationUser)
         {
-            //edit does not update the db on post so it fails
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var User = new User()
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                StreetAddress = user.StreetAddress
-            };
+            //user.Id = userModel.UserId;
+            //user.FirstName = userModel.FirstName;
+            //user.LastName = userModel.LastName;
 
-            if (user.Id != user.Id)
+            //var User = new User()
+            //{
+            //    UserId = userModel.UserId,
+            //    FirstName = userModel.FirstName,
+            //    LastName = userModel.LastName,
+            //    StreetAddress = userModel.StreetAddress,
+            //    PhoneNumber = userModel.PhoneNumber
+            //};
+
+            //applicationUser.Id = id;
+
+            if (id != user.Id)
             {
                 return NotFound();
             }
 
+            //ModelState.Remove("User");
+            //ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(User);
+                    _context.Update(applicationUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -155,44 +169,44 @@ namespace Bangazon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
-           ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", userModel.UserId);
-            return View(userModel);
-        }
-
-        // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
+           //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", userModel.UserId);
             return View(user);
         }
 
+        // GET: Users/Delete/5
+        //public async Task<IActionResult> Delete(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var user = await _context.User
+        //        .FirstOrDefaultAsync(m => m.UserId == id);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(user);
+        //}
+
         // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(string id)
+        //{
+        //    var user = await _context.User.FindAsync(id);
+        //    _context.User.Remove(user);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool UserExists(string id)
         {
-            return _context.User.Any(e => e.UserId == id);
+            return _context.ApplicationUsers.Any(e => e.Id == id);
         }
     }
 }

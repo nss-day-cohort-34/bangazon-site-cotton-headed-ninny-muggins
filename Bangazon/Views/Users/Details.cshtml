@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Account View</h1>
 
 <div>
     <h4>User</h4>
@@ -37,7 +37,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id=@Html.DisplayFor(model => model.UserId)>Edit</a> |
+    <a asp-action="Edit" asp-route-id=@Model.UserId>Edit</a> |
     <a asp-controller="PaymentTypes" asp-action="Index">Payment Options</a> |
     <a asp-controller="Orders" asp-action="Index">Order History</a>
 </div>
