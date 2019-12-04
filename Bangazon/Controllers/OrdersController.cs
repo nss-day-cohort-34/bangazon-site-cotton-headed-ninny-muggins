@@ -67,21 +67,35 @@ namespace Bangazon.Controllers
 
             var orderProduct = await _context.OrderProduct
                 .Where(op => op.OrderId == order.OrderId)
+                .Include(op => op.Product)
                 .ToListAsync();
+
+            var lineItems = orderProduct.Select(op =>
+            {
+                var olm = new OrderLineItem
+                {
+                    Product = op.Product,
+                    //Units = 0
+                };
+                return olm;
+            });
 
             var orderDetail = new OrderDetailViewModel()
             {
                 Order = order,
-                LineItems = new List<OrderLineItem>()
+                LineItems = lineItems
             };
 
-            foreach (OrderProduct op in orderProduct)
-            {
-                orderDetail.LineItems.ToList().Add(new OrderLineItem {
-                    Product = op.Product,
-                    //Units = 0
-                });
-            }
+
+
+
+            //foreach (OrderProduct op in orderProduct)
+            //{
+            //    orderDetail.LineItems.ToList().Add(new OrderLineItem {
+            //        Product = op.Product,
+            //        //Units = 0
+            //    });
+            //}
 
             if (order == null)
             {

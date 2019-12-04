@@ -5,10 +5,8 @@
 }
 
 <h1>Order Details</h1>
-
-<div>
-    <h4>Order</h4>
-    <hr />
+</hr>
+@*<div>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Order.DateCreated)
@@ -16,33 +14,34 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Order.DateCreated)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Order.DateCompleted)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Order.DateCompleted)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Order.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Order.User.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Order.PaymentType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Order.PaymentType.AccountNumber)
-        </dd>
     </dl>
-</div>
+</div>*@
 
 <div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Order.DateCreated)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Order.DateCreated)
+        </dd>
+    </dl>
+    <dl class="row">
+        @{ if (Model.Order.PaymentType == null) 
+            { 
+                <span>Active</span>
+            }
+            else
+            {
+                <span>Completed</span>
+            }
+        }
+    </dl>
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    Products
+                    Product Name
                 </th>
                 <th>
                     Units to Purchase
@@ -74,6 +73,7 @@
                 </tr>
             }
         </tbody>
+    </table>
 </div>
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model.Order.OrderId">Edit</a> |*@
