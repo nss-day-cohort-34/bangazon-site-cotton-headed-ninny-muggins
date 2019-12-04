@@ -67,8 +67,9 @@
                     <td>
                         @*<a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
                             <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |*@
-                        <a asp-action="Delete"
-                           asp-route-id="@Model.Order.OrderProducts.Where(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId)">Delete</a>
+                        <a asp-action="DeleteOrderProduct" asp-controller="Orders">Delete</a>
+                        @*don't think i need the attribute below for the delete link 
+                        asp-route-id="@Model.Order.OrderProducts.Where(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId)"*@
                     </td>
                 </tr>
             }

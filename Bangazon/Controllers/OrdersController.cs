@@ -33,25 +33,6 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-
-        /* 
-                public async Task<IActionResult> Types()
-        {
-            //var model = new ProductTypesViewModel();
-            var groupedProducts = await _context
-                .ProductType
-                .Select(pt => new GroupedProducts
-                    {
-                        TypeId = pt.ProductTypeId,
-                        TypeName = pt.Label,
-                        ProductCount = pt.Products.Count(),
-                        Products = pt.Products.OrderByDescending(p => p.DateCreated).Take(3)
-                    }).ToListAsync();
-            return View(groupedProducts);
-        } 
-        */
-
-
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -85,17 +66,6 @@ namespace Bangazon.Controllers
                 Order = order,
                 LineItems = lineItems
             };
-
-
-
-
-            //foreach (OrderProduct op in orderProduct)
-            //{
-            //    orderDetail.LineItems.ToList().Add(new OrderLineItem {
-            //        Product = op.Product,
-            //        //Units = 0
-            //    });
-            //}
 
             if (order == null)
             {
@@ -216,6 +186,41 @@ namespace Bangazon.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // GET: Orders/Delete/5
+        // STILL NEED TO REFACTOR FOR DELETING SINGLE ORDERPRODUCT
+
+        //public async Task<IActionResult> DeleteOrderProduct(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var orderProduct = await _context.OrderProduct
+        //        .Include(o => o.PaymentType)
+        //        .Include(o => o.User)
+        //        .FirstOrDefaultAsync(m => m.OrderId == id);
+        //    if (orderProduct == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(orderProduct);
+        //}
+
+        // POST: Orders/Delete/5
+        // STILL NEED TO REFACTOR FOR DELETING SINGLE ORDERPRODUCT
+
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteOrderProductConfirmed(int id)
+        //{
+        //    var order = await _context.Order.FindAsync(id);
+        //    _context.Order.Remove(order);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
         private bool OrderExists(int id)
         {
