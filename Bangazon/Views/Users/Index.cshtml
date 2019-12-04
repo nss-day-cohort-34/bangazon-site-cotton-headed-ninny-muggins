@@ -18,6 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.StreetAddress)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -33,9 +36,13 @@
                 @Html.DisplayFor(model => model.StreetAddress)
             </td>
             <td>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id=@Html.DisplayFor(model => model.UserId)>Edit</a> |
                 <a asp-action="Details" asp-route-id=@Html.DisplayFor(model => model.UserId)>Details</a> |
-                <a asp-controller="PaymentTypes" asp-action="Index">Payment Options</a>
+                <a asp-controller="PaymentTypes" asp-action="Index">Payment Options</a> |
+                <a asp-controller="Orders" asp-action="Index">Order History</a> 
             </td>
         </tr>
     </tbody>

@@ -33,7 +33,13 @@ namespace Bangazon.Controllers
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                StreetAddress = user.StreetAddress
+                StreetAddress = user.StreetAddress,
+                PhoneNumber = user.PhoneNumber,
+                ApplicationUser = new ApplicationUser()
+                {
+                    Orders = user.Orders,
+                    PaymentTypes = user.PaymentTypes
+                }
             };
             //var applicationDbContext = _context.User
             //                                    .Include(u => u.FirstName)
@@ -42,19 +48,20 @@ namespace Bangazon.Controllers
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var User = new User()
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                StreetAddress = user.StreetAddress
+                StreetAddress = user.StreetAddress,
+                PhoneNumber = user.PhoneNumber
             };
             if (User == null)
             {

@@ -9,7 +9,7 @@ namespace Bangazon.Models
     public class User
     {
         public string UserId { get; set; }
-        public ApplicationUser LoggedInUser { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         [Required]
         [Display(Name = "First Name")]
@@ -20,6 +20,11 @@ namespace Bangazon.Models
         public string LastName { get; set; }
 
         [Required]
+        [Display(Name = "Address")]
         public string StreetAddress { get; set; }
+
+        [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
     }
 }
