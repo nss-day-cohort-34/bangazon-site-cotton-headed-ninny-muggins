@@ -8,17 +8,22 @@ using Bangazon.Models;
 using Bangazon.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         public async Task<IActionResult> Index(string SearchString)
         {
@@ -26,10 +31,19 @@ namespace Bangazon.Controllers
 
             if (SearchString != null)
             {
-                applicationDbContext = _context.Product.Where(p => p.City.Contains(SearchString));
+                applicationDbContext = _context.Product.Where(p => p.City.ToLower().Contains(SearchString));
                 
             }
            
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> Search(string SearchString)
+        {
+            var applicationDbContext = _context.Product.Where(p => p.Title.ToLower().Contains(SearchString) || p.City.ToLower().Contains(SearchString));
+
+
+
             return View(await applicationDbContext.ToListAsync());
         }
 
