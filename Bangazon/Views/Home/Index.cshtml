@@ -6,11 +6,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to Bangazon</h1>
-    <p>Here are some of the latest products available on our store:</p>
+    @*<p>Here are some of the latest products available on our store:</p>*@
 </div>
 
 <div class="justify-content-center">
-    <form asp-controller="Home" asp-action="Index" method="get">
+    @*<form asp-controller="Home" asp-action="Index" method="get">
         <p>
             <input type="text" name="SearchString" placeholder="Enter a city to find local products" size="30">
             <input type="submit" value="Search" />  |
@@ -20,8 +20,11 @@
             </a>
         </p>
         
-    </form>
+    </form>*@
 </div>
+
+<h5 class="text-center">Latest Products For Sale on Bangazon!</h5>
+<br />
 
 @if (Model.ToList().Count == 0)
 {
@@ -37,10 +40,10 @@ else
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
         </tr>
@@ -53,10 +56,10 @@ else
                     <a href=@Url.Action("Details", "Products", new { Id = item.ProductId })>@item.Title</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
+                    @Html.DisplayFor(modelItem => item.Price)
                 </td>
                  
             </tr>
