@@ -10,7 +10,7 @@
     <thead>
         <tr>
             <th>
-                Product
+                Title
             </th>
             <th>
                 Price
@@ -21,10 +21,13 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Products) {
+@foreach (var item in Model.Products)
+{
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <a href=@Url.Action("Details", "Products", new {Id = item.ProductId })>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
@@ -36,3 +39,6 @@
 }
     </tbody>
 </table>
+<div>
+    <a asp-action="Types">Back to Product Types</a>
+</div>
