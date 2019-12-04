@@ -34,17 +34,12 @@ namespace Bangazon.Controllers
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+                .FirstOrDefaultAsync(m => m.DateCompleted == null);
 
             var orderProduct = await _context.OrderProduct
                 .Where(op => op.OrderId == order.OrderId)
@@ -70,7 +65,13 @@ namespace Bangazon.Controllers
 
             if (order == null)
             {
-                return NotFound();
+                var emptyOrderDetail = new OrderDetailViewModel()
+                {
+                    Order = null,
+                    OrderProducts = null,
+                    LineItems = null
+                };
+                return View(emptyOrderDetail);
             }
 
             return View(orderDetail);
@@ -216,16 +217,15 @@ namespace Bangazon.Controllers
         }
 
         //POST: Orders/Delete/5
-        // STILL NEED TO REFACTOR FOR DELETING SINGLE ORDERPRODUCT
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteOrderProductConfirmed(int id)
         {
-            var order = await _context.Order.FindAsync(id);
-            _context.Order.Remove(order);
+            var orderProduct = await _context.OrderProduct.FindAsync(id);
+            _context.OrderProduct.Remove(orderProduct);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details));
         }
 
         private bool OrderExists(int id)

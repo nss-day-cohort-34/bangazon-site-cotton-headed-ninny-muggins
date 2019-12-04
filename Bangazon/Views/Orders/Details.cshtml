@@ -7,83 +7,85 @@
 <h1>Order Details</h1>
 </hr>
 @*<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Order.DateCreated)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Order.DateCreated)
-        </dd>
-    </dl>
-</div>*@
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Order.DateCreated)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Order.DateCreated)
+            </dd>
+        </dl>
+    </div>*@
+
+@{ if (Model.Order == null)
+    {
+        <p>You have no items in your cart</p>
+        <a asp-controller="Products" asp-action="ProductListByType"><p>Check out our fine selection of products</p></a>
+    }
+    else
+    {
 
 
+        <div>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Order.DateCreated)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Order.DateCreated)
+                </dd>
+            </dl>
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Order.DateCreated)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Order.DateCreated)
-        </dd>
-    </dl>
-    <dl class="row">
-        @{ if (Model.Order.PaymentType == null) 
-            { 
-                <span>Active</span>
-            }
-            else
-            {
-                <span>Completed on @Html.DisplayFor(model => model.Order.DateCompleted)</span>
-            }
-        }
-    </dl>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Product Name
-                </th>
-                <th>
-                    Units to Purchase
-                </th>
-                <th>
-                    Cost
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var li in Model.LineItems)
-            {
-                var orderProductToDelete = Model.OrderProducts.First(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId);
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => li.Product.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => li.Units)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => li.Cost)
-                    </td>
-                    <td>
-                        <a asp-action="DeleteOrderProduct" asp-route-id=@orderProductToDelete.OrderProductId>Delete</a>
-                           @*asp-route-id="@Model.Order.OrderProducts.FirstOrDefault(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId)"*@
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-<div>
-    <a asp-action="Index">Back to List</a> <br/>
-    <button class="btn btn-danger" id="test__test">say hi</button>
-</div>
-<script>
-    const testButton = document.querySelector("#test__test")
-    testButton.addEventListener("click", e => {
-        e.preventDefault()
-        alert("hi")
-    })
-</script>
+            @*use the logic in the "if" statement below to conditionally render based on order status*@
+            @*<dl class="row">
+                    @{ if (Model.Order.PaymentType == null)
+                        {
+                            <span>Active</span>
+                        }
+                        else
+                        {
+                            <span>Completed on @Html.DisplayFor(model => model.Order.DateCompleted)</span>
+                        }
+                    }
+                </dl>*@
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Product Name
+                        </th>
+                        <th>
+                            Units to Purchase
+                        </th>
+                        <th>
+                            Cost
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var li in Model.LineItems)
+                    {
+                        var orderProductToDelete = Model.OrderProducts.First(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId);
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => li.Product.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => li.Units)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => li.Cost)
+                            </td>
+                            <td>
+                                <a asp-action="DeleteOrderProduct" asp-route-id=@orderProductToDelete.OrderProductId>Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <a asp-action="">Complete Your Order</a> |
+            <a asp-action="Index">View Past Orders</a><br />
+        </div>
+    } }
