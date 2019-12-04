@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Bangazon.Controllers
 {
+   
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,6 +49,7 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        
         //GET: ProductTypes with products
         public async Task<IActionResult> ProductListByType(int? id)
         {
@@ -89,7 +91,7 @@ namespace Bangazon.Controllers
             return View(product);
         }
 
-        
+        [Authorize]
         // GET: Products/Create
         public async Task<IActionResult> Create()
         {
