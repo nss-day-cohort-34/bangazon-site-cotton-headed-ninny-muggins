@@ -4,17 +4,10 @@
     ViewData["Title"] = "DeleteOrderProduct";
 }
 
-<h1>Delete Order Product</h1>
 
-<h3>Delete this @Html.DisplayFor(model => model.Product.Title) from your cart?</h3>
+<h2>Delete this @Html.DisplayFor(model => model.Product.Title) from your cart?</h2>
 <div>
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderProductId)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrderProductId)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Product.Title)
         </dt>
@@ -39,12 +32,6 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Product.Quantity)
         </dd>
-        @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImagePath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagePath)
-        </dd>*@
     </dl>
 
     <form asp-action="DeleteOP">
@@ -60,9 +47,4 @@
     </form>
 
     <a asp-action="Index">Back to List</a>
-
-    @*<div>
-            <a asp-action="DeleteOrderProductConfirmed" asp-controller="Orders" asp-route-id="@Model.OrderProductId">Delete!</a>
-            <a asp-action="Index">Back to List</a>
-        </div>*@
 </div>
