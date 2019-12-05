@@ -1,0 +1,42 @@
+﻿@model Bangazon.Models.User
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>User Profile</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StreetAddress)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.StreetAddress)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id=@Html.DisplayFor(model => model.UserId)>Edit</a> |
+                <a asp-action="Details" asp-route-id=@Html.DisplayFor(model => model.UserId)>Details</a> |
+                <a asp-controller="PaymentTypes" asp-action="Index">Payment Options</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
