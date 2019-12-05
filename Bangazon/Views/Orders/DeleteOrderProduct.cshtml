@@ -1,0 +1,50 @@
+﻿@model Bangazon.Models.OrderProduct
+
+@{
+    ViewData["Title"] = "DeleteOrderProduct";
+}
+
+
+<h2>Delete this @Html.DisplayFor(model => model.Product.Title) from your cart?</h2>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Product.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Product.Quantity)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteOP">
+        <div class="form-group">
+            @Html.HiddenFor(op => op.OrderProductId)
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="OrderProductId" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    </form>
+
+    <a asp-action="Index">Back to List</a>
+</div>

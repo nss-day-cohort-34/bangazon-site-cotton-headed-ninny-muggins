@@ -11,6 +11,7 @@ using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
+
 namespace Bangazon.Controllers
 {
    
@@ -42,11 +43,16 @@ namespace Bangazon.Controllers
             return View(groupedProducts);
         }
 
+
         // GET: Products
-        public async Task<IActionResult> Index()
+        [Authorize]
+        public async Task<IActionResult> ToSellIndex()
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            var products = await _context.Product
+                                        .Include(p => p.ProductType)
+                                        .Where(p => p.UserId == user.Id).ToListAsync();
+            return View(products);
         }
 
         
@@ -113,15 +119,30 @@ namespace Bangazon.Controllers
             ModelState.Remove("Product.User");
             if (ModelState.IsValid)
             {
+                if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
+                {
+                    TempData["notice"] = "Product title and description cannot contain special characters (!@#$%^()&*).";
+                    viewModel.ProductTypes = await _context.ProductType.ToListAsync();               
+                    return View(viewModel);
+                }
+                if (viewModel.Product.Price > 10000)
+                {
+                    TempData["maxPrice"] = "Price cannot exceed $10,000.";
+                    viewModel.ProductTypes = await _context.ProductType.ToListAsync();
+                    return View(viewModel);
+                }
                 var user = await GetCurrentUserAsync();
                 viewModel.Product.User = user;
                 viewModel.Product.UserId = user.Id;
                 viewModel.Product.DateCreated = DateTime.Now;
                 _context.Add(viewModel.Product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Types));
+                return RedirectToAction(nameof(ToSellIndex));
             }
+
             
+
+                     
             return View(viewModel);
         }
 
@@ -208,12 +229,23 @@ namespace Bangazon.Controllers
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ToSellIndex));
         }
 
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
+        }
+
+        public bool hasSpecialChar(string input)
+        {
+            string specialChar = @"!@#$%^&*()";
+            foreach (var item in specialChar)
+            {
+                if (input.Contains(item)) return true;
+            }
+
+            return false;
         }
     }
 }

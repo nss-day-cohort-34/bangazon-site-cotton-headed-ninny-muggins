@@ -42,8 +42,6 @@ namespace Bangazon.Controllers
         {
             var applicationDbContext = _context.Product.Where(p => p.Title.ToLower().Contains(SearchString) || p.City.ToLower().Contains(SearchString));
 
-
-
             return View(await applicationDbContext.ToListAsync());
         }
 

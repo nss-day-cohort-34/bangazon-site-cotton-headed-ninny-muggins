@@ -40,8 +40,8 @@
     @*Button below should do 2 things
             1. create an Order entry with activeUserId == userId && paymentTypeId == null
             2. create an OrderProduct entry with OrderId from prev step, and this product's Id*@
-    <button type="button" class="btn btn-primary" asp-action="" asp-controller="">Add to Cart</button>
+    <button type="button" class="btn btn-primary" asp-action="Create" asp-controller="Orders">Add to Cart</button>
 </div>
 <div>
-    <a asp-action="Types">Back to List</a>
+    <a href="javascript:history.go(-1)">Go Back to Previous Page</a>
 </div>
