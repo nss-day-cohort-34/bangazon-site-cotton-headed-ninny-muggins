@@ -172,7 +172,7 @@ namespace Bangazon.Controllers
             if (order.Count > 0)
             {
                 TempData["Delete Notice"] = "Not allowed to delete payment types asscoiated with an order";
-                return View("Delete");
+                return View("Delete", paymentType);
             }
 
 
