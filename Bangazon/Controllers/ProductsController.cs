@@ -11,6 +11,7 @@ using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
+
 namespace Bangazon.Controllers
 {
    
@@ -118,6 +119,18 @@ namespace Bangazon.Controllers
             ModelState.Remove("Product.User");
             if (ModelState.IsValid)
             {
+                if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
+                {
+                    TempData["notice"] = "Product title and description cannot contain special characters (!@#$%^()&*).";
+                    viewModel.ProductTypes = await _context.ProductType.ToListAsync();               
+                    return View(viewModel);
+                }
+                if (viewModel.Product.Price > 10000)
+                {
+                    TempData["maxPrice"] = "Price cannot exceed $10,000.";
+                    viewModel.ProductTypes = await _context.ProductType.ToListAsync();
+                    return View(viewModel);
+                }
                 var user = await GetCurrentUserAsync();
                 viewModel.Product.User = user;
                 viewModel.Product.UserId = user.Id;
@@ -126,7 +139,10 @@ namespace Bangazon.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ToSellIndex));
             }
+
             
+
+                     
             return View(viewModel);
         }
 
@@ -219,6 +235,17 @@ namespace Bangazon.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
+        }
+
+        public bool hasSpecialChar(string input)
+        {
+            string specialChar = @"!@#$%^&*()";
+            foreach (var item in specialChar)
+            {
+                if (input.Contains(item)) return true;
+            }
+
+            return false;
         }
     }
 }
