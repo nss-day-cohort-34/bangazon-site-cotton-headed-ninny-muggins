@@ -121,13 +121,13 @@ namespace Bangazon.Controllers
             {
                 if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
                 {
-                    TempData["notice"] = "Stop trying to confuse people. Product title and description cannot contain special characters.";
+                    TempData["notice"] = "Product title and description cannot contain special characters.";
                     viewModel.ProductTypes = await _context.ProductType.ToListAsync();               
                     return View(viewModel);
                 }
                 if (viewModel.Product.Price > 10000)
                 {
-                    TempData["maxPrice"] = "Don't be greedy. Price cannot exceed $10,000.";
+                    TempData["maxPrice"] = "Price cannot exceed $10,000.";
                     viewModel.ProductTypes = await _context.ProductType.ToListAsync();
                     return View(viewModel);
                 }
