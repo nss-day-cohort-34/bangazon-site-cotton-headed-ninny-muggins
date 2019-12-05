@@ -9,6 +9,7 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Bangazon.Models.OrderViewModels;
+using Bangazon.Models.ReportViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -48,6 +49,21 @@ namespace Bangazon.Controllers
 
             viewModel.Orders = incompleteOrders;
             return View(viewModel);
+        }
+
+        //Multiple Orders
+        public async Task<IActionResult> MultipleOrders()
+        {
+            var user = await GetCurrentUserAsync();
+            var model = new MultipleOrderViewModel();
+
+            model.MultipleOrdersList = await _context.ApplicationUsers
+                                    .Include(u => u.Orders)
+                                    .Where(u => u.Orders.Any(o => o.OrderProducts.Any(op => op.Product.User == user)))
+                                    .Where(u => u.Orders.Where(o => ))
+
+
+
         }
 
         // GET: Reports/Details/5
