@@ -167,6 +167,15 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var paymentType = await _context.PaymentType.FindAsync(id);
+            var order = await _context.Order.Where(o => o.PaymentType.PaymentTypeId == id).ToListAsync();
+
+            if (order != null)
+            {
+                TempData["Delete Notice"] = "Not allowed to delete payment types asscoiated with an order";
+                return View("Delete");
+            }
+
+
             _context.PaymentType.Remove(paymentType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
