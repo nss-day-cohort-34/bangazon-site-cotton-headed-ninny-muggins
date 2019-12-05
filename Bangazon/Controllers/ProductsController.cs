@@ -119,14 +119,22 @@ namespace Bangazon.Controllers
             ModelState.Remove("Product.User");
             if (ModelState.IsValid)
             {
+                if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
+                {
+                    TempData["notice"] = "Stop confusing people. Product title and description cannot contain special characters.";
+                    viewModel.ProductTypes = await _context.ProductType.ToListAsync();               
+                    return View(viewModel);
+                }
+                if (viewModel.Product.Price > 10000)
+                {
+                    TempData["maxPrice"] = "Don't be greedy. Price cannot exceed $10,000.";
+                    viewModel.ProductTypes = await _context.ProductType.ToListAsync();
+                    return View(viewModel);
+                }
                 var user = await GetCurrentUserAsync();
                 viewModel.Product.User = user;
                 viewModel.Product.UserId = user.Id;
                 viewModel.Product.DateCreated = DateTime.Now;
-                if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
-                {
-                    return BadRequest(new { error = "Product title and description cannot contain special characters. Go back and try again." });
-                }
                 _context.Add(viewModel.Product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(ToSellIndex));
