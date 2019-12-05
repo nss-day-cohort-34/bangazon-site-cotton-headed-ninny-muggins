@@ -32,37 +32,12 @@
                     </dd>
                 </dl>
 
-                @*<form asp-action="DeleteOP">
-                        <div class="form-group">
-                            @Html.HiddenFor(op => op.OrderProductId)
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" asp-for="OrderProductId" />
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Delete" class="btn btn-danger" />
-                        </div>
-                    </form>*@
-
-                    @{var orderId = Model.Order.OrderId;}
+                @{var orderId = Model.Order.OrderId;}
                 <a asp-action="Delete" asp-route-id=@orderId>
                     <button>
                         Cancel Order
                     </button>
                 </a>
-
-
-                @*<form asp-controller="Orders" asp-action="Delete">
-                    <div class="form-group">
-                        @Html.HiddenFor(m => m.Order.OrderId)
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" asp-for=@Model.Order.OrderId />
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Cancel Order?" class="btn btn-danger" />
-                    </div>
-                </form>*@
             </div>
 
             <table class="table">
