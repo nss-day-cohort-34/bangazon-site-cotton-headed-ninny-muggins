@@ -13,7 +13,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
+              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -43,7 +43,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ToSellIndex">My Products</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">View Cart</a>
+
 
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
 
@@ -54,22 +54,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Profile</a>
                         </li>
-                        <li class="nav-item" style="margin:auto">
-                            <form class="searchForm" asp-controller="Home" asp-action="Search" method="get">
-                                <p class="searchField">
-                                    <input type="text" name="SearchString" placeholder="Product search by location or name" size="32">
-                                    <input type="submit" value="Search" />
-                                </p>
-                            </form>
-                        </li>
                     </ul>
                 </div>
-                
-            </div>
-          
         </nav>
+
         <div class="text-center"
-            
+
+                    <form class="searchForm" asp-controller="Home" asp-action="Search" method="get">
+                        <p class="searchField">
+                            <input type="text" name="SearchString" placeholder="Product search by location or name" size="32">
+                            <input type="submit" value="Search" />
+                        </p>
+                    </form>
+
         </div>
     </header>
     <div class="container">
