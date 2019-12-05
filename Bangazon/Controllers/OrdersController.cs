@@ -43,41 +43,45 @@ namespace Bangazon.Controllers
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.DateCompleted == null);
-
-            var orderProduct = await _context.OrderProduct
-                .Where(op => op.OrderId == order.OrderId)
-                .Include(op => op.Product)
-                .ToListAsync();
-
-            var lineItems = orderProduct.Select(op =>
-            {
-                var olm = new OrderLineItem
-                {
-                    Product = op.Product,
-                    Units = 1
-                };
-                return olm;
-            });
-
-            var orderDetail = new OrderDetailViewModel()
-            {
-                Order = order,
-                OrderProducts = orderProduct,
-                LineItems = lineItems
-            };
-
             if (order == null)
             {
                 var emptyOrderDetail = new OrderDetailViewModel()
                 {
-                    Order = null,
-                    OrderProducts = null,
-                    LineItems = null
+                    Order = new Order(),
+                    OrderProducts = new List<OrderProduct>(),
                 };
                 return View(emptyOrderDetail);
             }
+            else
+            {
 
-            return View(orderDetail);
+
+                var orderProduct = await _context.OrderProduct
+                    .Where(op => op.OrderId == order.OrderId)
+                    .Include(op => op.Product)
+                    .ToListAsync();
+                var lineItems = orderProduct.Select(op =>
+                {
+                    var olm = new OrderLineItem
+                    {
+                        Product = op.Product,
+                        Units = 1
+                    };
+                    return olm;
+                });
+                var orderDetail = new OrderDetailViewModel()
+                {
+                    Order = order,
+                    OrderProducts = orderProduct,
+                    LineItems = lineItems
+                };
+                return View(orderDetail);
+            }
+
+
+        
+
+
         }
 
         // GET: Orders/Create
@@ -184,14 +188,14 @@ namespace Bangazon.Controllers
         // POST: Orders/Delete/5
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Order o)
         {
-            var order = await _context.Order.FindAsync(id);
+            var order = await _context.Order.FindAsync(o.OrderId);
             var orderProducts = await _context.OrderProduct.Where(op => op.OrderId == order.OrderId).ToListAsync();
 
             foreach (var op in orderProducts)
             {
-            _context.OrderProduct.Remove(op);
+                _context.OrderProduct.Remove(op);
             }
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
@@ -210,9 +214,9 @@ namespace Bangazon.Controllers
                 .Include(op => op.Order)
                 .Include(op => op.Product)
                 .FirstOrDefaultAsync(op => op.OrderProductId == id);
-//                .Include(o => o.OrderProducts);
-                //.Where(op => op.OrderId == o.OrderId));
-               // .Include(o => o.PaymentType)
+            //                .Include(o => o.OrderProducts);
+            //.Where(op => op.OrderId == o.OrderId));
+            // .Include(o => o.PaymentType)
 
             if (orderProduct == null)
             {

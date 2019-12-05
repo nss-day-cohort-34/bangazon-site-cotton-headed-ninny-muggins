@@ -11,7 +11,12 @@
 @{ if (Model.Order == null)
     {
         <p>You have no items in your cart</p>
-        <a asp-controller="Products" asp-action="ProductListByType"><p>Check out our fine selection of products</p></a>
+        <a asp-controller="Products" asp-action="Types"><p>Check out our fine selection of products</p></a>
+    }
+    else if (Model.Order.OrderId == 0)
+    {
+        <p>You have no open orders</p>
+        <a asp-controller="Products" asp-action="Types"><p>Check out our fine selection of products</p></a>
     }
     else
     {

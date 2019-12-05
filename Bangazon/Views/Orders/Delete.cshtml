@@ -36,10 +36,24 @@
             @Html.DisplayFor(model => model.PaymentType.AccountNumber)
         </dd class>
     </dl>
+
     
-    <form asp-action="DeleteConfirmed">
-        <input type="hidden" asp-for="OrderId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+     <form asp-action="DeleteConfirmed">
+        <div class="form-group">
+            @Html.HiddenFor(o => o.OrderId)
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="OrderId" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    </form>    
+    
+    
+    @*<form asp-controller="Orders" asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="OrderId" value="OrderId"/>
+        <input type="submit" value="Cancel" class="btn btn-danger" /> 
+    </form>*@
         <a asp-action="Details">Back to Order Details</a>
-    </form>
 </div>
