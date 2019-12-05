@@ -9,19 +9,32 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Bangazon.Models.OrderViewModels;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace Bangazon.Controllers
 {
     public class OrdersController : Controller
     {
+        private readonly IConfiguration _config;
+
         private readonly ApplicationDbContext _context;
 
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public OrdersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration config)
         {
+            _config = config;
             _context = context;
             _userManager = userManager;
+        }
+
+        public SqlConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            }
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -76,37 +89,84 @@ namespace Bangazon.Controllers
                 };
                 return View(orderDetail);
             }
-
-
-        
-
-
         }
 
         // GET: Orders/Create
-        public IActionResult Create()
-        {
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber");
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            return View();
-        }
+        //   public async Task<IActionResult> Create()
+        //{
+        // var existingOrder = await _context.Order
+        //     .Where(o => o.DateCompleted == null)
+        //     .Include(o => o.PaymentType)
+        //     .Include(o => o.User).ToListAsync();
+        //// return View(await pastOrders.ToListAsync());
+
+        // if (existingOrder != null)
+        // {
+        //     existingOrder.OrderProducts.Add()
+        // }
+
+        // return View();
+        //  }
 
         // POST: Orders/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [ActionName("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,DateCreated,DateCompleted,UserId,PaymentTypeId")] Order order)
+        public async Task<IActionResult> Create(int productId)
         {
-            if (ModelState.IsValid)
+            var existingOrder = await _context.Order
+      .Where(o => o.DateCompleted == null)
+      .Include(o => o.PaymentType)
+      .Include(o => o.User)
+      .FirstOrDefaultAsync();
+            // return View(await pastOrders.ToListAsync());
+
+
+            if (existingOrder != null)
             {
-                _context.Add(order);
+                var orderProduct = new OrderProduct { OrderId = existingOrder.OrderId, ProductId = productId };
+                _context.OrderProduct.Add(orderProduct);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["cart-notice"] = "Item successfully added to cart!";
+                //might need to change the view
+                return RedirectToAction("Details", "Products", new { Id = productId });
             }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
-            return View(order);
+
+            else
+            {
+                    var user = await GetCurrentUserAsync();
+
+                    // 1. get the id of the new posted Order
+                    using (SqlConnection conn = Connection)
+                    {
+                        conn.Open();
+                        using (SqlCommand cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = @"INSERT INTO [Order]
+                                            ( UserId, PaymentTypeId, DateCreated, DateCompleted)
+                                            OUTPUT Inserted.OrderId
+                                            VALUES
+                                            ( @UserId, null, GETDATE(), null);
+                                            ";
+                            cmd.Parameters.Add(new SqlParameter("@UserId", user.Id));
+                            int orderId = (Int32)cmd.ExecuteScalar();
+
+                            cmd.CommandText = @"INSERT INTO OrderProduct
+                                            ( OrderId, ProductId )
+                                            VALUES
+                                            ( @OrderId, @ProductId );
+                                            ";
+                            cmd.Parameters.Add(new SqlParameter("@OrderId", orderId));
+                            cmd.Parameters.Add(new SqlParameter("@ProductId", productId));
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    TempData["cart-notice"] = "Item successfully added to cart!";
+
+                    return RedirectToAction("Details", "Products", new { Id = productId });
+            }
         }
 
         // GET: Orders/Edit/5
