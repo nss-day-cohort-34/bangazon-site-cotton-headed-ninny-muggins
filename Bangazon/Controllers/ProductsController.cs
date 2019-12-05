@@ -10,7 +10,7 @@ using Bangazon.Models;
 using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using System.Text.RegularExpressions;
+
 
 namespace Bangazon.Controllers
 {
@@ -121,7 +121,7 @@ namespace Bangazon.Controllers
             {
                 if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
                 {
-                    TempData["notice"] = "Stop confusing people. Product title and description cannot contain special characters.";
+                    TempData["notice"] = "Stop trying to confuse people. Product title and description cannot contain special characters.";
                     viewModel.ProductTypes = await _context.ProductType.ToListAsync();               
                     return View(viewModel);
                 }
