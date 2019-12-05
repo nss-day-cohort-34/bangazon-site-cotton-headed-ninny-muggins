@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,39 +14,40 @@ using Microsoft.AspNetCore.Authorization;
 namespace Bangazon.Controllers
 {
     [Authorize]
-    public class UsersController : Controller
+ 
+    public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
-        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ApplicationUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
         }
 
-        // GET: Users
-        public async Task<IActionResult> Index()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var User = new User()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                StreetAddress = user.StreetAddress,
-                PhoneNumber = user.PhoneNumber,
-                ApplicationUser = new ApplicationUser()
-                {
-                    Orders = user.Orders,
-                    PaymentTypes = user.PaymentTypes
-                }
-            };
-            //var applicationDbContext = _context.User
-            //                                    .Include(u => u.FirstName)
-            //                                    .Where(u => u.UserId == u.UserId);
-            return View(User);
-        }
+        //// GET: Users
+        //public async Task<IActionResult> Index()
+        //{
+        //    var user = await _userManager.GetUserAsync(HttpContext.User);
+        //    var User = new User()
+        //    {
+        //        FirstName = user.FirstName,
+        //        LastName = user.LastName,
+        //        StreetAddress = user.StreetAddress,
+        //        PhoneNumber = user.PhoneNumber,
+        //        ApplicationUser = new ApplicationUser()
+        //        {
+        //            Orders = user.Orders,
+        //            PaymentTypes = user.PaymentTypes
+        //        }
+        //    };
+        //    //var applicationDbContext = _context.User
+        //    //                                    .Include(u => u.FirstName)
+        //    //                                    .Where(u => u.UserId == u.UserId);
+        //    return View(User);
+        //}
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details()
@@ -56,20 +58,20 @@ namespace Bangazon.Controllers
             //}
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var User = new User()
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                StreetAddress = user.StreetAddress,
-                PhoneNumber = user.PhoneNumber
-            };
-            if (User == null)
+            //var User = new User()
+            //{
+            //    UserId = user.Id,
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName,
+            //    StreetAddress = user.StreetAddress,
+            //    PhoneNumber = user.PhoneNumber
+            //};
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return View(User);
+            return View(user);
         }
 
         // GET: Users/Create
@@ -126,23 +128,18 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.C:\Users\marla\workspace\cSharp\groupProjects\bangazon-site-cotton-headed-ninny-muggins\Bangazon\Views\Users\
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,StreetAddress, PhoneNumber")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            //user.Id = userModel.UserId;
-            //user.FirstName = userModel.FirstName;
-            //user.LastName = userModel.LastName;
+           
+            user.FirstName = applicationUser.FirstName;
+            user.LastName = applicationUser.LastName;
+            user.PhoneNumber = applicationUser.PhoneNumber;
+            user.StreetAddress = applicationUser.StreetAddress;
 
-            //var User = new User()
-            //{
-            //    UserId = userModel.UserId,
-            //    FirstName = userModel.FirstName,
-            //    LastName = userModel.LastName,
-            //    StreetAddress = userModel.StreetAddress,
-            //    PhoneNumber = userModel.PhoneNumber
-            //};
 
-            //applicationUser.Id = id;
+
+
 
             if (id != user.Id)
             {
@@ -155,8 +152,27 @@ namespace Bangazon.Controllers
             {
                 try
                 {
-                    _context.Update(applicationUser);
-                    await _context.SaveChangesAsync();
+                    //
+                    // Summary:
+                    //     Updates the specified user in the backing store.
+                    //
+                    // Parameters:
+                    //   user:
+                    //     The user to update.
+                    //
+                    // Returns:
+                    //     The System.Threading.Tasks.Task that represents the asynchronous operation, containing
+                    //     the Microsoft.AspNetCore.Identity.IdentityResult of the operation.
+                    IdentityResult result = await _userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                        return RedirectToAction(nameof(Details));
+                    else
+                    {
+                        foreach (IdentityError error in result.Errors)
+                            ModelState.AddModelError("", error.Description);
+                    }
+                    //_context.Update(applicationUser);
+                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -171,7 +187,7 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Details));
             }
-           //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", userModel.UserId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", userModel.UserId);
             return View(user);
         }
 

@@ -1,4 +1,4 @@
-﻿@model Bangazon.Models.User
+﻿@model Bangazon.Models.ApplicationUser
 
 @{
     ViewData["Title"] = "Details";
@@ -37,7 +37,7 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id=@Model.UserId>Edit</a> |
+    <a asp-action="Edit" asp-route-id=@Model.Id>Edit</a> |
     <a asp-controller="PaymentTypes" asp-action="Index">Payment Options</a> |
     <a asp-controller="Orders" asp-action="Index">Order History</a>
 </div>
