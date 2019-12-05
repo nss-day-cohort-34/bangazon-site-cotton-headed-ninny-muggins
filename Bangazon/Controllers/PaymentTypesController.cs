@@ -169,7 +169,7 @@ namespace Bangazon.Controllers
             var paymentType = await _context.PaymentType.FindAsync(id);
             var order = await _context.Order.Where(o => o.PaymentType.PaymentTypeId == id).ToListAsync();
 
-            if (order != null)
+            if (order.Count > 0)
             {
                 TempData["Delete Notice"] = "Not allowed to delete payment types asscoiated with an order";
                 return View("Delete");
