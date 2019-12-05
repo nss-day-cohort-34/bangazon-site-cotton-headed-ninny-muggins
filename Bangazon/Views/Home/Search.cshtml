@@ -8,7 +8,7 @@
 
 @if (Model.ToList().Count == 0)
 {
-    <p>No results. Please enter a product name or location and try again.</p>
+    <p>There are no results for your search. Please enter a product name or city location and try your search again.</p>
 }
 else
 {
@@ -51,5 +51,5 @@ else
         </tbody>
     </table>
     <hr />
-    <a asp-action="Index">Back to Home</a>
+    <a href='javascript:history.go(-1)'>Go Back to Home Page</a>
 }

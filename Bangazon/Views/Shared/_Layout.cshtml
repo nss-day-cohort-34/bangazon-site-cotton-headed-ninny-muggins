@@ -13,7 +13,7 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
+              integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -39,19 +39,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Sell</a>
                         </li>
                         <li class="nav-item">
-
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="ToSellIndex">My Products</a>
                         </li>
                         <li class="nav-item">
-
-
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Cart</a>
-
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Details">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Profile</a>
-                        </li>
-                        <li>
                         </li>
                     </ul>
                 </div>
