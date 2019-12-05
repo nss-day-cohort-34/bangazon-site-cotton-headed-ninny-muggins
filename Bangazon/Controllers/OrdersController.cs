@@ -43,6 +43,7 @@ namespace Bangazon.Controllers
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.DateCompleted == null);
+
             if (order == null)
             {
                 var emptyOrderDetail = new OrderDetailViewModel()
@@ -54,8 +55,6 @@ namespace Bangazon.Controllers
             }
             else
             {
-
-
                 var orderProduct = await _context.OrderProduct
                     .Where(op => op.OrderId == order.OrderId)
                     .Include(op => op.Product)
