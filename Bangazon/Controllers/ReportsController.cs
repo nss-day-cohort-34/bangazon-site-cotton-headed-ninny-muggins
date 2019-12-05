@@ -43,7 +43,7 @@ namespace Bangazon.Controllers
                 .Include(o => o.User)
                 .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
-                .Where(o => o.PaymentType == null && o.OrderProducts.Any(op => op.Product.User == user))
+                .Where(o => o.DateCompleted == null && o.OrderProducts.Any(op => op.Product.User == user))
                 .ToListAsync();
 
             viewModel.Orders = incompleteOrders;
