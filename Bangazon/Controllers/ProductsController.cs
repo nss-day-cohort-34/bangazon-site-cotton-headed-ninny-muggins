@@ -42,11 +42,16 @@ namespace Bangazon.Controllers
             return View(groupedProducts);
         }
 
+
         // GET: Products
-        public async Task<IActionResult> Index()
+        [Authorize]
+        public async Task<IActionResult> ToSellIndex()
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            var products = await _context.Product
+                                        .Include(p => p.ProductType)
+                                        .Where(p => p.UserId == user.Id).ToListAsync();
+            return View(products);
         }
 
         
@@ -119,7 +124,7 @@ namespace Bangazon.Controllers
                 viewModel.Product.DateCreated = DateTime.Now;
                 _context.Add(viewModel.Product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Types));
+                return RedirectToAction(nameof(ToSellIndex));
             }
             
             return View(viewModel);
@@ -208,7 +213,7 @@ namespace Bangazon.Controllers
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ToSellIndex));
         }
 
         private bool ProductExists(int id)
