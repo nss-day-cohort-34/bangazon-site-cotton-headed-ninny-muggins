@@ -58,9 +58,17 @@ namespace Bangazon.Controllers
             var model = new MultipleOrderViewModel();
 
             model.MultipleOrdersList = await _context.ApplicationUsers
-                                    .Include(u => u.Orders)
-                                    .Where(u => u.Orders.Any(o => o.OrderProducts.Any(op => op.Product.User == user)))
-                                    .Where(u => u.Orders.Where(o => ))
+                              .Include(u => u.Orders)
+                              .Where(u => u.Orders.Any(o => o.OrderProducts.Any(op => op.Product.User == user)))
+                              .Where(u => u.Orders.Where(o => o.PaymentTypeId == null).Count() > 1)
+                              .Select(u => new UserOrderCount
+                                {
+                                    User = u,
+                                    OpenOrderNumber = u.Orders.Where(o => o.PaymentTypeId == null).Count()
+                                })
+                                .ToListAsync();
+
+            return View(model);
 
 
 

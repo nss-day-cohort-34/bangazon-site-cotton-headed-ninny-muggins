@@ -18,12 +18,12 @@
                 <tr>
                     <th>Order# @order.OrderId</th>
                 </tr>
-            
-                
+
+
             </thead>
-           
+
             <tbody>
-                
+
                 @foreach (var orderProduct in order.OrderProducts)
                 {
                     if (orderProduct.Product.UserId == (string)ViewData["UserId"])
@@ -38,3 +38,4 @@
     }
 }
 
+<a href='javascript:history.go(-1)'>Back to the Reports Home</a>
