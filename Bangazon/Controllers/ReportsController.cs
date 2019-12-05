@@ -7,23 +7,47 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity;
+using Bangazon.Models.OrderViewModels;
 
 namespace Bangazon.Controllers
 {
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReportsController(ApplicationDbContext context)
+        public ReportsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Reports
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
-            return View(await applicationDbContext.ToListAsync());
+            var order = _context.Order.Include(o => o.PaymentType).Include(o => o.User);
+            return View(await order.ToListAsync());
+        }
+
+        // Get Incomplete orders
+        public async Task<IActionResult> IncompleteOrders()
+        {
+            var user = await GetCurrentUserAsync();
+            ViewData["UserId"] = user.Id;
+            var viewModel = new IncompleteOrderViewModel();
+
+            var incompleteOrders = await _context.Order
+                .Include(o => o.User)
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .Where(o => o.PaymentType == null && o.OrderProducts.Any(op => op.Product.User == user))
+                .ToListAsync();
+
+            viewModel.Orders = incompleteOrders;
+            return View(viewModel);
         }
 
         // GET: Reports/Details/5

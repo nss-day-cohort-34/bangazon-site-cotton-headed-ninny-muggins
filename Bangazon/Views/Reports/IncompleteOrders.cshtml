@@ -1,0 +1,40 @@
+﻿@model Bangazon.Models.OrderViewModels.IncompleteOrderViewModel
+
+@{
+    ViewData["Title"] = "IncompleteOrders";
+}
+
+<h3>Your Incomplete Orders</h3>
+
+@foreach (var order in Model.Orders)
+{
+    if (order.OrderProducts.Any(op => op.Product.UserId == (string)ViewData["UserId"]))
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@order.User.FirstName @order.User.LastName</th>
+                </tr>
+                <tr>
+                    <th>Order# @order.OrderId</th>
+                </tr>
+            
+                
+            </thead>
+           
+            <tbody>
+                
+                @foreach (var orderProduct in order.OrderProducts)
+                {
+                    if (orderProduct.Product.UserId == (string)ViewData["UserId"])
+                    {
+                        <tr>
+                            <td>@orderProduct.Product.Title</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+}
+
