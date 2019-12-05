@@ -21,8 +21,13 @@ namespace Bangazon.Models
         public string LastName { get; set; }
 
         [Required]
+        [Display(Name = "Address")]
         public string StreetAddress { get; set; }
-        
+
+        [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        public override string PhoneNumber { get; set; }
+
         public virtual ICollection<Product> Products { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
