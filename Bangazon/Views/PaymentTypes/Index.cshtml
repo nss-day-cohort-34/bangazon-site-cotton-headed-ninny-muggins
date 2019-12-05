@@ -21,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.AccountNumber)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,9 +37,6 @@
                 @Html.DisplayFor(modelItem => item.AccountNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
                 <a asp-action="Edit" asp-route-id="@item.PaymentTypeId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.PaymentTypeId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.PaymentTypeId">Delete</a>
@@ -53,5 +47,5 @@
 </table>
 <hr />
 <div>
-    <a asp-area="" asp-controller="Users" asp-action="Details">Back to Profile</a>
+    <a asp-area="" asp-controller="ApplicationUsers" asp-action="Details">Back to Profile</a>
 </div>

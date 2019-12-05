@@ -52,10 +52,6 @@ namespace Bangazon.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details()
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
             //var User = new User()
@@ -107,15 +103,7 @@ namespace Bangazon.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             user.Id = id;
-            //var User = new User()
-            //{
-            //    ApplicationUser = user,
-            //    UserId = user.Id,
-            //    FirstName = user.FirstName,
-            //    LastName = user.LastName,
-            //    StreetAddress = user.StreetAddress,
-            //    PhoneNumber = user.PhoneNumber
-            //};
+
             if (User == null)
             {
                 return NotFound();
@@ -131,23 +119,17 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-           
+           //removed bind and only passing the info needed to update the db based off of ticket 21
             user.FirstName = applicationUser.FirstName;
             user.LastName = applicationUser.LastName;
             user.PhoneNumber = applicationUser.PhoneNumber;
             user.StreetAddress = applicationUser.StreetAddress;
 
 
-
-
-
             if (id != user.Id)
             {
                 return NotFound();
             }
-
-            //ModelState.Remove("User");
-            //ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
@@ -171,8 +153,6 @@ namespace Bangazon.Controllers
                         foreach (IdentityError error in result.Errors)
                             ModelState.AddModelError("", error.Description);
                     }
-                    //_context.Update(applicationUser);
-                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -187,7 +167,6 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Details));
             }
-            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", userModel.UserId);
             return View(user);
         }
 
