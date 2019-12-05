@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Bangazon.Models.Product>
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h4>Product Search Results</h4>
+
+@if (Model.ToList().Count == 0)
+{
+    <p>No results. Please enter a product name or location and try again.</p>
+}
+else
+{
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    <a href=@Url.Action("Details", "Products", new { Id = item.ProductId })>@item.Title</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                <a asp-action="Details" asp-controller="Products" asp-route-id="@item.ProductId">More Information</a>
+                    </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+    <hr />
+    <a asp-action="Index">Back to Home</a>
+}
