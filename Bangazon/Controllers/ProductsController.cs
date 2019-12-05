@@ -121,7 +121,7 @@ namespace Bangazon.Controllers
             {
                 if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
                 {
-                    TempData["notice"] = "Product title and description cannot contain special characters.";
+                    TempData["notice"] = "Product title and description cannot contain special characters (!@#$%^()&*).";
                     viewModel.ProductTypes = await _context.ProductType.ToListAsync();               
                     return View(viewModel);
                 }
@@ -239,7 +239,7 @@ namespace Bangazon.Controllers
 
         public bool hasSpecialChar(string input)
         {
-            string specialChar = @"\|!#$%&/()=?»«@£§€{}.-;'<>_,";
+            string specialChar = @"!@#$%^&*()";
             foreach (var item in specialChar)
             {
                 if (input.Contains(item)) return true;

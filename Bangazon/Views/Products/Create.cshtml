@@ -5,7 +5,7 @@
 
     bool hasSpecialChar(string input)
     {
-        string specialChar = @"\|!#$%&/()=?»«@£§€{}.-;'<>_,";
+        string specialChar = @"!@#$%^&*()";
         foreach (var item in specialChar)
         {
             if (input.Contains(item)) return true;
@@ -70,7 +70,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="javascript:history.go(-1)">Go Back to Previous Page</a>
 </div>
 
 
