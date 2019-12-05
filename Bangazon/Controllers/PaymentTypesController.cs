@@ -76,7 +76,6 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            //var usersPayments = _context.PaymentType.Where(p => p.UserId == user.Id.ToString());
             ModelState.Remove("User");
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
@@ -168,6 +167,15 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var paymentType = await _context.PaymentType.FindAsync(id);
+            var order = await _context.Order.Where(o => o.PaymentType.PaymentTypeId == id).ToListAsync();
+
+            if (order.Count > 0)
+            {
+                TempData["Delete Notice"] = "Not allowed to delete payment types asscoiated with an order";
+                return View("Delete", paymentType);
+            }
+
+
             _context.PaymentType.Remove(paymentType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

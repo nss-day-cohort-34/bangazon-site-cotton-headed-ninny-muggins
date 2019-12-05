@@ -14,6 +14,7 @@ namespace Bangazon.Models
     [Required]
     [DataType(DataType.Date)]
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    [Display(Name = "Date Created")]
     public DateTime DateCreated { get; set; }
 
     [Required]
@@ -22,6 +23,7 @@ namespace Bangazon.Models
 
     [Required]
     [StringLength(20)]
+    [Display(Name = "Account Number")]
     public string AccountNumber { get; set; }
 
     [Required]
