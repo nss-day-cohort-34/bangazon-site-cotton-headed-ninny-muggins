@@ -52,8 +52,18 @@ namespace Bangazon.Controllers
             var products = await _context.Product
                                         .Include(p => p.ProductType)
                                         .Where(p => p.UserId == user.Id).ToListAsync();
+            //1. need to count the number of product solds 
+            //number of orders for a given product on orders tht have payment type 
+            foreach (var product in products)
+            {
+                var userOrders = _context.OrderProduct.Where(op => op.Order.DateCompleted != null);
+                var productsSold = userOrders.Select(op => op.ProductId).Where(id => id == product.ProductId).Count();
+                product.ProductSold = productsSold;
+            }
+                
             return View(products);
         }
+
 
         
         //GET: ProductTypes with products
@@ -101,7 +111,7 @@ namespace Bangazon.Controllers
         // GET: Products/Create
         public async Task<IActionResult> Create()
         {
-            var viewModel = new ProductCreateViewModel()
+            var viewModel = new ProductCreateAndEditViewModel()
             {
                 ProductTypes = await _context.ProductType.ToListAsync()
             };
@@ -113,7 +123,7 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductCreateViewModel viewModel)
+        public async Task<IActionResult> Create(ProductCreateAndEditViewModel viewModel)
         {
             ModelState.Remove("Product.UserId");
             ModelState.Remove("Product.User");
@@ -140,9 +150,7 @@ namespace Bangazon.Controllers
                 return RedirectToAction(nameof(ToSellIndex));
             }
 
-            
-
-                     
+             
             return View(viewModel);
         }
 
@@ -153,39 +161,57 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
+            var viewModel = new ProductCreateAndEditViewModel()
+            {
+                Product = await _context.Product.FindAsync(id),
+                ProductTypes = await _context.ProductType.ToListAsync()
+            };
 
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            if (viewModel.Product == null)
             {
                 return NotFound();
             }
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
-            return View(product);
-        }
 
+            return View(viewModel);
+        }
         // POST: Products/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")] Product product)
+        public async Task<IActionResult> Edit(int id, ProductCreateAndEditViewModel viewModel)
         {
-            if (id != product.ProductId)
+            if (id != viewModel.Product.ProductId)
             {
                 return NotFound();
             }
-
+            ModelState.Remove("Product.UserId");
+            ModelState.Remove("Product.User");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
+                    if (hasSpecialChar(viewModel.Product.Title) || hasSpecialChar(viewModel.Product.Description))
+                    {
+                        TempData["notice"] = "Product title and description cannot contain special characters (!@#$%^()&*).";
+                        viewModel.ProductTypes = await _context.ProductType.ToListAsync();
+                        return View(viewModel);
+                    }
+                    if (viewModel.Product.Price > 10000)
+                    {
+                        TempData["maxPrice"] = "Price cannot exceed $10,000.";
+                        viewModel.ProductTypes = await _context.ProductType.ToListAsync();
+                        return View(viewModel);
+                    }
+                    var user = await GetCurrentUserAsync();
+                    viewModel.Product.User = user;
+                    viewModel.Product.UserId = user.Id;
+                    _context.Update(viewModel.Product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ProductExists(viewModel.Product.ProductId))
                     {
                         return NotFound();
                     }
@@ -194,11 +220,10 @@ namespace Bangazon.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ToSellIndex));
             }
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
-            return View(product);
+
+            return View(viewModel);
         }
 
         // GET: Products/Delete/5

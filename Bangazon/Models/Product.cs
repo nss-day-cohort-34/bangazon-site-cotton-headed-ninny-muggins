@@ -14,6 +14,7 @@ namespace Bangazon.Models
         [Required]
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Display(Name = "Date Created")]
         public DateTime DateCreated {get;set;}
 
         [Required]
@@ -29,7 +30,12 @@ namespace Bangazon.Models
         public decimal Price { get; set; }
 
         [Required]
+        [Display(Name = "Current Inventory")]
         public int Quantity { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Number Sold")]
+        public int ProductSold { get; set; }
 
         [Required]
         public string UserId {get; set;}
@@ -47,6 +53,7 @@ namespace Bangazon.Models
         [Display(Name="Product Category")]
         public int ProductTypeId { get; set; }
 
+        [Display(Name = "Product Type")]
         public ProductType ProductType { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }

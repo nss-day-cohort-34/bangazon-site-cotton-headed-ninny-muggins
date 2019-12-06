@@ -25,8 +25,11 @@
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ProductSold)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.City)
-            </th> 
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.ProductType)
             </th>
@@ -50,6 +53,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductSold)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.City)
