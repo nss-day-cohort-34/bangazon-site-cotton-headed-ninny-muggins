@@ -33,9 +33,6 @@ namespace Bangazon.Models
         [Display(Name = "Current Inventory")]
         public int Quantity { get; set; }
 
-        //[Display(Name = "Inventory Sold")]
-        //public int InventorySold { get; set; }
-
         [Required]
         public string UserId {get; set;}
 
