@@ -52,17 +52,17 @@
                         </li>
                     </ul>
                 </div>
+                
+            </div>
+           
         </nav>
-
-        <div class="text-center">
-
-                    <form class="searchForm" asp-controller="Home" asp-action="Search" method="get">
-                        <p class="searchField">
-                            <input type="text" name="SearchString" placeholder="Product search by location or name" size="32">
-                            <input type="submit" value="Search" />
-                        </p>
-                    </form>
-
+        <div style="text-align: center">
+            <form asp-controller="Home" asp-action="Search" method="get">
+                <p>
+                    <input type="text" name="SearchString" placeholder="Product search by location or name" size="32">
+                    <input type="submit" value="Search" />
+                </p>
+            </form>
         </div>
     </header>
     <div class="container">
