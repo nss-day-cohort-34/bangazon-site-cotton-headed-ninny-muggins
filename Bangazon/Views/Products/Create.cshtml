@@ -1,18 +1,7 @@
-﻿@model Bangazon.Models.ProductViewModels.ProductCreateViewModel
+﻿@model Bangazon.Models.ProductViewModels.ProductCreateAndEditViewModel
 
 @{
     ViewData["Title"] = "Create";
-
-    bool hasSpecialChar(string input)
-    {
-        string specialChar = @"!@#$%^&*()";
-        foreach (var item in specialChar)
-        {
-            if (input.Contains(item)) return true;
-        }
-
-        return false;
-    }
 
 }
 

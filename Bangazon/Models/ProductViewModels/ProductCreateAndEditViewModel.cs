@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bangazon.Models.ProductViewModels
 {
-    public class ProductCreateViewModel
+    public class ProductCreateAndEditViewModel
     {
 
         public Product Product { get; set; }
