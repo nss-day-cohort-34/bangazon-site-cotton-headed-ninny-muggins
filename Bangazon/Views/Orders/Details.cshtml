@@ -11,7 +11,12 @@
 @{ if (Model.Order == null)
     {
         <p>You have no items in your cart</p>
-        <a asp-controller="Products" asp-action="ProductListByType"><p>Check out our fine selection of products</p></a>
+        <a asp-controller="Products" asp-action="Types"><p>Check out our fine selection of products</p></a>
+    }
+    else if (Model.Order.OrderId == 0)
+    {
+        <p>You have no open orders</p>
+        <a asp-controller="Products" asp-action="Types"><p>Check out our fine selection of products</p></a>
     }
     else
     {
@@ -31,72 +36,96 @@
                         <p style="color: forestgreen">Active</p>
                     </dd>
                 </dl>
-                    <form asp-controller="Orders" asp-action="Delete">
-                        <input name="order-detail-to-be-deleted" type="hidden" asp-for="@Model.Order.OrderId"/>
-                        <button type="submit" class="btn btn-danger">
-                            Cancel Order?
-                        </button>
-                    </form>
+
+                @{var orderId = Model.Order.OrderId;}
+                <a asp-action="Delete" asp-route-id=@orderId>
+                    <button>
+                        Cancel Order
+                    </button>
+                </a>
             </div>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Product Name
-                        </th>
-                        <th>
-                            Units to Purchase
-                        </th>
-                        <th>
-                            Cost
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var li in Model.LineItems)
-                    {
-                        var orderProductToDelete = Model.OrderProducts.First(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId);
+            <form asp-action="CompleteOrder">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Units to Purchase
+                            </th>
+                            <th>
+                                Cost per Unit
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var li in Model.LineItems)
+                        {
+                            var orderProductToDelete = Model.OrderProducts.First(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId);
+                            
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => li.Product.Title)
                             </td>
-                            @*add a way to edit #purchased in the element below(???)*@
                             <td>
-                                @Html.DisplayFor(modelItem => li.Units)
+                                <input asp-for=@li.Units type="number" value="1" />
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => li.Cost)
+                                @Html.DisplayFor(modelItem => li.Product.Price)
                             </td>
                             <td>
                                 <a asp-action="DeleteOrderProduct" asp-route-id=@orderProductToDelete.OrderProductId>Delete</a>
                             </td>
+                            <div class="form-group">
+                                @Html.HiddenFor(m => li.Units)
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" asp-for="LineItems" />
+                            </div>
                         </tr>
-                    }
-            </tbody>
-        </table>
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            Order Total
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th>
-                            @{
-                                var sumCost = Model.LineItems.Select(li =>li.Cost).Sum();
-                            }
+                        }
+                    </tbody>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Order Total
+                            </th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                @{
+                                    var sumCost = Model.LineItems.Select(li => li.Cost).Sum();
+                                }
                                 @Html.DisplayFor(m => sumCost)
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-    </div>
-    <span></span>
-    <div>
-        <a asp-action="">Complete Your Order</a> |
-        <a asp-action="Index">View Past Orders</a><br />
-    </div>
-} }
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="form-group">
+                    <label asp-for=@Model class="control-label"></label>
+                    <select asp-for="Order.PaymentTypeId" class="form-control" asp-items="Model.PaymentTypeOptions"></select>
+                    <div class="form-group">
+                        @Html.HiddenFor(m => m.Order)
+                    </div>
+                    <div class="form-group">
+                        @Html.Hidden("LineItems", Model.LineItems)
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="Order.OrderId" />
+                    </div>
+                </div>
+                <input type="submit" value="Complete Your Order" class="btn btn-primary" />
+            </form>
+
+        </div>
+        <span></span>
+        <div>
+            <a asp-action="Index">View Past Orders</a><br />
+        </div>
+
+    } }

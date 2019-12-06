@@ -10,37 +10,67 @@
     <h4>Details</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Quantity)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Quantity)
         </dd>
     </dl>
 </div>
 <div>
     @*Button below should do 2 things
-            1. create an Order entry with activeUserId == userId && paymentTypeId == null
-            2. create an OrderProduct entry with OrderId from prev step, and this product's Id*@
-    <button type="button" class="btn btn-primary" asp-action="Create" asp-controller="Orders">Add to Cart</button>
+        1. create an Order entry with activeUserId == userId && paymentTypeId == null
+        2. create an OrderProduct entry with OrderId from prev step, and this product's Id*@
+    @if (TempData["cart-notice"] != null)
+    {
+        <p style="color:forestgreen;">@TempData["cart-notice"]</p>
+    }
+
+    @*    <form asp-action="DeleteOP">
+            <div class="form-group">
+                @Html.HiddenFor(op => op.OrderProductId)
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="OrderProductId" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </div>
+        </form>*@
+
+    <form asp-action="Create" asp-controller="Orders">
+
+        @{var productId = Model.ProductId;}
+        <div class="form-group">
+            @Html.HiddenFor(p => p.ProductId)
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="ProductId" />
+        </div>
+        <div class="form-group">
+            <input type="submit" asp-for=@Model.ProductId value="Add To Cart" />
+        </div>
+    </form>
+
 </div>
 <div>
     <a href="javascript:history.go(-1)">Go Back to Previous Page</a>
