@@ -52,8 +52,18 @@ namespace Bangazon.Controllers
             var products = await _context.Product
                                         .Include(p => p.ProductType)
                                         .Where(p => p.UserId == user.Id).ToListAsync();
+            //1. need to count the number of product solds 
+            //number of orders for a given product on orders tht have payment type 
+            foreach (var product in products)
+            {
+                var userOrders = _context.OrderProduct.Where(op => op.Order.DateCompleted != null);
+                var productsSold = userOrders.Select(op => op.ProductId).Where(id => id == product.ProductId).Count();
+                product.ProductSold = productsSold;
+            }
+                
             return View(products);
         }
+
 
         
         //GET: ProductTypes with products
