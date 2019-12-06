@@ -57,6 +57,8 @@ namespace Bangazon.Controllers
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.DateCompleted == null);
 
+            var paymentTypes = await _context.PaymentType.ToListAsync();
+
             if (order == null)
             {
                 var emptyOrderDetail = new OrderDetailViewModel()
@@ -85,28 +87,12 @@ namespace Bangazon.Controllers
                 {
                     Order = order,
                     OrderProducts = orderProduct,
-                    LineItems = lineItems
+                    LineItems = lineItems,
+                    PaymentTypes = paymentTypes
                 };
                 return View(orderDetail);
             }
         }
-
-        // GET: Orders/Create
-        //   public async Task<IActionResult> Create()
-        //{
-        // var existingOrder = await _context.Order
-        //     .Where(o => o.DateCompleted == null)
-        //     .Include(o => o.PaymentType)
-        //     .Include(o => o.User).ToListAsync();
-        //// return View(await pastOrders.ToListAsync());
-
-        // if (existingOrder != null)
-        // {
-        //     existingOrder.OrderProducts.Add()
-        // }
-
-        // return View();
-        //  }
 
         // POST: Orders/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -121,7 +107,6 @@ namespace Bangazon.Controllers
       .Include(o => o.PaymentType)
       .Include(o => o.User)
       .FirstOrDefaultAsync();
-            // return View(await pastOrders.ToListAsync());
 
 
             if (existingOrder != null)
@@ -169,60 +154,44 @@ namespace Bangazon.Controllers
             }
         }
 
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
-            return View(order);
-        }
+ 
 
         // POST: Orders/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,DateCreated,DateCompleted,UserId,PaymentTypeId")] Order order)
-        {
-            if (id != order.OrderId)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("OrderId,DateCreated,DateCompleted,UserId,PaymentTypeId")] Order order)
+        //{
+        //    if (id != order.OrderId)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
-            return View(order);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(order);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!OrderExists(order.OrderId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
+        //    ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
+        //    return View(order);
+        //}
 
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -294,6 +263,62 @@ namespace Bangazon.Controllers
             _context.OrderProduct.Remove(op);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details));
+        }
+
+        public async Task<IActionResult> CompleteOrder(int Units, int PaymentTypeId, OrderDetailViewModel viewModel)
+        {
+
+            // 2. get form data
+            // a. selected paymentType
+            // b. Quantity 
+
+            // 3. Update Order entry in db -- add paymentTypeId (from form), and DateCompleted (GETDATE())
+            var order =  _context.Order.Where(o => o.OrderId == viewModel.Order.OrderId).FirstOrDefault();
+            order.DateCompleted = DateTime.Now;
+            order.PaymentTypeId = viewModel.Order.PaymentTypeId;
+            _context.Update(order);
+            await _context.SaveChangesAsync();
+
+
+            // 4. Update OrderProduct entries in db -- decrement quantity by the number purchased on order
+            var orderProducts = await _context.OrderProduct.Where(op => op.OrderId == viewModel.Order.OrderId).Include(op => op.Product).ToListAsync();
+
+            var updatedProducts = new List<Product>();                    
+            foreach (var li in viewModel.LineItems) 
+            {
+                var updatedProduct = new Product()
+                {
+                    ProductId = li.Product.ProductId,
+                    Title = li.Product.Title,
+                    Description = li.Product.Description,
+                    DateCreated = li.Product.DateCreated,
+                    Price = li.Product.Price,
+                    UserId = li.Product.UserId,
+                    City = li.Product.City,
+                    Quantity = li.Product.Quantity - li.Units
+                };
+                updatedProducts.Add(updatedProduct);
+            }
+
+            using (SqlConnection conn = Connection)
+            {
+                foreach (var up in updatedProducts)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE OrderProduct
+                                                SET Quantity = @quantity
+                                                WHERE ProductId = @productId
+                                            ";
+                        cmd.Parameters.Add(new SqlParameter("@quantity", up.Quantity));
+                        cmd.Parameters.Add(new SqlParameter("@productId", up.ProductId));
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            return View();
         }
 
         private bool OrderExists(int id)

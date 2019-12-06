@@ -45,64 +45,71 @@
                 </a>
             </div>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Product Name
-                        </th>
-                        <th>
-                            Units to Purchase
-                        </th>
-                        <th>
-                            Cost
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var li in Model.LineItems)
-                    {
-                        var orderProductToDelete = Model.OrderProducts.First(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId);
+            <form asp-action="CompleteOrder">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => li.Product.Title)
-                            </td>
-                            @*add a way to edit #purchased in the element below(???)*@
-                            <td>
-                                @Html.DisplayFor(modelItem => li.Units)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => li.Cost)
-                            </td>
-                            <td>
-                                <a asp-action="DeleteOrderProduct" asp-route-id=@orderProductToDelete.OrderProductId>Delete</a>
-                            </td>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Units to Purchase
+                            </th>
+                            <th>
+                                Cost per Unit
+                            </th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            Order Total
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th>
-                            @{
-                                var sumCost = Model.LineItems.Select(li => li.Cost).Sum();
-                            }
-                            @Html.DisplayFor(m => sumCost)
-                        </th>
-                    </tr>
-                </thead>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var li in Model.LineItems)
+                        {
+                            var orderProductToDelete = Model.OrderProducts.First(op => op.OrderId == Model.Order.OrderId && li.Product.ProductId == op.ProductId);
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => li.Product.Title)
+                                </td>
+                                <td>
+                                    <input asp-for=@li.Units type="number" value="1" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => li.Product.Price)
+                                </td>
+                                <td>
+                                    <a asp-action="DeleteOrderProduct" asp-route-id=@orderProductToDelete.OrderProductId>Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Order Total
+                            </th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                @{
+                                    var sumCost = Model.LineItems.Select(li => li.Cost).Sum();
+                                }
+                                @Html.DisplayFor(m => sumCost)
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="form-group">
+                    <label asp-for="Order.PaymentTypeId" class="control-label"></label>
+                    <select asp-for="Order.PaymentTypeId" class="form-control" asp-items="Model.PaymentTypeOptions"></select>
+                </div>
+                <input type="submit" value="Complete Your Order" class="btn btn-primary" />
+            </form>
+
         </div>
         <span></span>
         <div>
-            <a asp-action="">Complete Your Order</a> |
             <a asp-action="Index">View Past Orders</a><br />
         </div>
+
     } }
