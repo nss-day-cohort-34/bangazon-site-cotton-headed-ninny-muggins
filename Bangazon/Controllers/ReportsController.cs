@@ -88,18 +88,49 @@ namespace Bangazon.Controllers
         }
 
         //Abandoned ProductTypes
-        //public async Task<IActionResult> AbandonedProductTypes()
-        //{
-        //    using (SqlConnection conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (SqlCommand cmd = conn.CreateCommand())
-        //        {
-        //            var user = await GetCurrentUserAsync();
-        //            cmd.CommandText = @"SELECT ProductTypeId, ";
-        //        }
-        //    }
-        //}
+        public async Task<IActionResult> AbandonedProductTypes()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    var user = await GetCurrentUserAsync();
+                    cmd.CommandText = @"SELECT ProductTypeId, Label, COUNT(OrderId) as IncompleteOrderCount
+                                        FROM (SELECT p.ProductTypeId, pt.Label, o.OrderId
+                                                FROM [Order] o INNER JOIN OrderProduct op on op.OrderId = o.OrderId
+                                                LEFT JOIN Product p on p.ProductId = op.ProductId
+                                                LEFT JOIN ProductType pt on pt.ProductTypeId = p.ProductTypeId
+                                                WHERE o.DateCompleted IS NULL and p.UserId = @userId
+                                                GROUP BY o.OrderId, p.ProductTypeId, pt.Label) o 
+                                                GROUP BY ProductTypeId, Label
+                                                ORDER BY ProductTypeId";
+
+                    cmd.Parameters.Add(new SqlParameter("@userId", user.Id));
+                    
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    var model = new AbandonedProductTypesReportViewModel();
+
+                    while (reader.Read())
+                    {
+                        var newPT = new ProductType
+                        {
+                            ProductTypeId = reader.GetInt32(reader.GetOrdinal("ProductTypeId")),
+                            Label = reader.GetString(reader.GetOrdinal("Label"))
+                        };
+
+                        var newProductTypeCount = new ProductTypeCount
+                        {
+                            ProductType = newPT,
+                            IncompleteOrderCount = reader.GetInt32(reader.GetOrdinal("IncompleteOrderCount"))
+                        };
+                        model.IncompleteOrderCounts.Add(newProductTypeCount);
+                    }
+                    return View(model);
+                }
+            }
+        }
 
         // GET: Reports/Details/5
         public async Task<IActionResult> Details(int? id)
