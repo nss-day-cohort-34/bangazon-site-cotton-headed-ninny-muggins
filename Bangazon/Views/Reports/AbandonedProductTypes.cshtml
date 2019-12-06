@@ -1,0 +1,38 @@
+﻿@model Bangazon.Models.ReportViewModels.AbandonedProductTypesReportViewModel
+
+@{
+    ViewData["Title"] = "AbandonedProductTypes";
+}
+
+<h3>Abandoned Product Types</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IncompleteOrderCounts[0].ProductType.Label)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IncompleteOrderCounts[0].IncompleteOrderCount)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.IncompleteOrderCounts)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductType.Label)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IncompleteOrderCount)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<a href='javascript:history.go(-1)'>Back to the Reports Home</a>
