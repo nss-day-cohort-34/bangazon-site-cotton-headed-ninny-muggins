@@ -281,7 +281,7 @@ namespace Bangazon.Controllers
 
 
             // 4. Update OrderProduct entries in db -- decrement quantity by the number purchased on order
-            var orderProducts = await _context.OrderProduct.Where(op => op.OrderId == viewModel.Order.OrderId).Include(op => op.Product).ToListAsync();
+            var orderProducts = await _context.OrderProduct.Include(op => op.Product).Where(op => op.OrderId == viewModel.Order.OrderId).ToListAsync();
 
             var updatedProducts = new List<Product>();                    
             foreach (var li in viewModel.LineItems) 
