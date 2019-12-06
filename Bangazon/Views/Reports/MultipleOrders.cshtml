@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model Bangazon.Models.ReportViewModels.MultipleOrderViewModel
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "MultipleOrders";
+}
+
+<h1>Customers with Multiple Orders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MultipleOrdersList[0].User.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MultipleOrdersList[0].User.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MultipleOrdersList[0].OpenOrderNumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.MultipleOrdersList)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OpenOrderNumber)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href='javascript:history.go(-1)'>Back to the Reports Home</a>
