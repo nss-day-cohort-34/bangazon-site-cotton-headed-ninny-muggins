@@ -10,18 +10,31 @@ using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Bangazon.Models.OrderViewModels;
 using Bangazon.Models.ReportViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
 
 namespace Bangazon.Controllers
 {
+    [Authorize]
     public class ReportsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _config;
 
-        public ReportsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ReportsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration config)
         {
             _context = context;
             _userManager = userManager;
+            _config = config;
+        }
+        public SqlConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            }
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -73,6 +86,20 @@ namespace Bangazon.Controllers
 
 
         }
+
+        //Abandoned ProductTypes
+        //public async Task<IActionResult> AbandonedProductTypes()
+        //{
+        //    using (SqlConnection conn = Connection)
+        //    {
+        //        conn.Open();
+        //        using (SqlCommand cmd = conn.CreateCommand())
+        //        {
+        //            var user = await GetCurrentUserAsync();
+        //            cmd.CommandText = @"SELECT ProductTypeId, ";
+        //        }
+        //    }
+        //}
 
         // GET: Reports/Details/5
         public async Task<IActionResult> Details(int? id)
