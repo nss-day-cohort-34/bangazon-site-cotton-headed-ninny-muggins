@@ -33,6 +33,10 @@ namespace Bangazon.Models
         [Display(Name = "Current Inventory")]
         public int Quantity { get; set; }
 
+        [NotMapped]
+        [Display(Name = "Number Sold")]
+        public int ProductSold { get; set; }
+
         [Required]
         public string UserId {get; set;}
 

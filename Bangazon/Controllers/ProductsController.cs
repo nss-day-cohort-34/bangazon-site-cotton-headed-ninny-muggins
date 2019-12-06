@@ -54,17 +54,13 @@ namespace Bangazon.Controllers
                                         .Where(p => p.UserId == user.Id).ToListAsync();
             //1. need to count the number of product solds 
             //number of orders for a given product on orders tht have payment type 
-            //var userProductsSold = await _context.ApplicationUsers
-            //                                      .Include(u => u.Orders)
-            //                                      .Where(u => u.Orders.Any(o => o.OrderProducts.Any(op => op.Product.User == user)))
-            //                                      .Where(u => u.Orders.Where(o => o.PaymentTypeId != null).Count() > 1)
-            //                                      .Select(u => new UserOrderCount
-            //                                      {
-            //                                          User = u,
-            //                                          OpenOrderNumber = u.Orders.Where(o => o.PaymentTypeId == null).Count()
-            //                                      })
-            //                                        .ToListAsync();
-
+            foreach (var product in products)
+            {
+                var userOrders = _context.OrderProduct.Where(op => op.Order.DateCompleted != null);
+                var productsSold = userOrders.Select(op => op.ProductId).Where(id => id == product.ProductId).Count();
+                product.ProductSold = productsSold;
+            }
+                
             return View(products);
         }
 
